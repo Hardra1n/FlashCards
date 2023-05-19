@@ -30,7 +30,7 @@ namespace FlashCards.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateCard(long id, Card card)
         {
-            if (card.Id != id && card.Id != default(long))
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -47,16 +47,17 @@ namespace FlashCards.Controllers
             {
                 return BadRequest();
             }
-            var cardToAdd = new Card() { FrontSide = card.FrontSide, BackSide = card.BackSide };
-            var createdCard = repository.AddCard(cardToAdd);
-            return CreatedAtAction(nameof(GetCardById), new { id = createdCard.Id }, createdCard);
+            var createdCard = repository.AddCard(card);
+            return CreatedAtAction(nameof(GetCardById),
+                new { id = createdCard.Id },
+                createdCard);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteCard(long id)
         {
-            var cardToDelete
-                = repository.Cards.FirstOrDefault(card => card.Id == id);
+            var cardToDelete = repository
+                .Cards.FirstOrDefault(card => card.Id == id);
             if (cardToDelete != null)
             {
                 repository.RemoveCard(cardToDelete);

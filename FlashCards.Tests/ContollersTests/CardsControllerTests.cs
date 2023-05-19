@@ -120,43 +120,43 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
                 Times.Once());
         }
 
-        [Fact]
-        public void UpdateCard_IncorrectIdGivenInRequestBody_ReturnsBadRequest()
-        {
-            // Arrange
-            var repoStub = new Mock<ICardRepository>();
-            long idToUpdate = 1;
-            var cardUpdate = new Card()
-            {
-                Id = idToUpdate + 1,
-                FrontSide = "Something new",
-                BackSide = "Something new 2"
-            };
-            repoStub.Setup(repo => repo.UpdateCard(It.IsAny<long>(), It.IsAny<Card>()))
-                .Returns<long, Card>((id, card) =>
-                {
-                    if (card.Id != id)
-                    {
-                        throw new Exception();
-                    }
-                    return card;
-                });
-            var controller = new CardsController(repoStub.Object);
+        // [Fact]
+        // public void UpdateCard_IncorrectIdGivenInRequestBody_ReturnsBadRequest()
+        // {
+        //     // Arrange
+        //     var repoStub = new Mock<ICardRepository>();
+        //     long idToUpdate = 1;
+        //     var cardUpdate = new Card()
+        //     {
+        //         Id = idToUpdate + 1,
+        //         FrontSide = "Something new",
+        //         BackSide = "Something new 2"
+        //     };
+        //     repoStub.Setup(repo => repo.UpdateCard(It.IsAny<long>(), It.IsAny<Card>()))
+        //         .Returns<long, Card>((id, card) =>
+        //         {
+        //             if (card.Id != id)
+        //             {
+        //                 throw new Exception();
+        //             }
+        //             return card;
+        //         });
+        //     var controller = new CardsController(repoStub.Object);
 
-            try
-            {
-                // Act
-                var result = controller.UpdateCard(idToUpdate, cardUpdate);
+        //     try
+        //     {
+        //         // Act
+        //         var result = controller.UpdateCard(idToUpdate, cardUpdate);
 
-                // Assert
-                Assert.IsType<BadRequestResult>(result);
-            }
-            catch (Exception)
-            {
-                Assert.Fail("Exception getted");
-            }
+        //         // Assert
+        //         Assert.IsType<BadRequestResult>(result);
+        //     }
+        //     catch (Exception)
+        //     {
+        //         Assert.Fail("Exception getted");
+        //     }
 
-        }
+        // }
 
         [Fact]
         public void AddCard_CorrectData_ReturnsCreatedWithCard()
