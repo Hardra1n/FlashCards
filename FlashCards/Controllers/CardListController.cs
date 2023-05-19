@@ -8,11 +8,11 @@ namespace FlashCards.Controllers
     [ApiController]
     public class CardListController : Controller
     {
-        ICardListRepository repository;
+        private ICardListRepository repository;
 
         public CardListController(ICardListRepository repo)
         {
-            repository = repo;
+            this.repository = repo;
         }
 
         [HttpGet]

@@ -8,10 +8,13 @@ namespace FlashCards.Models
         [BindNever]
         public long Id { get; set; }
 
+        public long CardListId { get; set; }
+
         [Required]
         public string FrontSide { get; set; } = String.Empty;
 
         [Required]
         public string BackSide { get; set; } = String.Empty;
+
     }
 }
