@@ -54,7 +54,7 @@ namespace FlashCards.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCard(long id)
+        public IActionResult RemoveCard(long id)
         {
             var cardToDelete = repository
                 .Cards.FirstOrDefault(card => card.Id == id);

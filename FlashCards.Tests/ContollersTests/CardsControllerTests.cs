@@ -233,7 +233,7 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
             var controller = new CardsController(stubRepo.Object);
 
             // Act
-            var result = controller.DeleteCard(cards.First().Id);
+            var result = controller.RemoveCard(cards.First().Id);
 
             // Assert
             Assert.IsType<OkResult>(result);
@@ -263,7 +263,7 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
             var controller = new CardsController(stubRepo.Object);
 
             // Act
-            var result = controller.DeleteCard(cards.Last().Id + 1);
+            var result = controller.RemoveCard(cards.Last().Id + 1);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);
