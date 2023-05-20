@@ -18,12 +18,14 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
                 new ()
                 {
                     Id = 1,
+                    CardListId = 1,
                     FrontSide = "SomeSide",
                     BackSide = "AnotherSide"
                 },
                 new ()
                 {
                     Id = 2,
+                    CardListId = 1,
                     FrontSide = "OneSide",
                     BackSide = "OtherSide",
                 }
@@ -49,12 +51,14 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
                 new ()
                 {
                     Id = 1,
+                    CardListId = 1,
                     FrontSide = "SomeSide",
                     BackSide = "AnotherSide"
                 },
                 new ()
                 {
                     Id = 2,
+                    CardListId = 1,
                     FrontSide = "OneSide",
                     BackSide = "OtherSide",
                 }
@@ -103,6 +107,7 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
             var idToUpdate = 5;
             var cardUpdate = new Card()
             {
+                CardListId = 1,
                 FrontSide = "Something new",
                 BackSide = "Something new 2"
             };
@@ -120,55 +125,18 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
                 Times.Once());
         }
 
-        // [Fact]
-        // public void UpdateCard_IncorrectIdGivenInRequestBody_ReturnsBadRequest()
-        // {
-        //     // Arrange
-        //     var repoStub = new Mock<ICardRepository>();
-        //     long idToUpdate = 1;
-        //     var cardUpdate = new Card()
-        //     {
-        //         Id = idToUpdate + 1,
-        //         FrontSide = "Something new",
-        //         BackSide = "Something new 2"
-        //     };
-        //     repoStub.Setup(repo => repo.UpdateCard(It.IsAny<long>(), It.IsAny<Card>()))
-        //         .Returns<long, Card>((id, card) =>
-        //         {
-        //             if (card.Id != id)
-        //             {
-        //                 throw new Exception();
-        //             }
-        //             return card;
-        //         });
-        //     var controller = new CardsController(repoStub.Object);
-
-        //     try
-        //     {
-        //         // Act
-        //         var result = controller.UpdateCard(idToUpdate, cardUpdate);
-
-        //         // Assert
-        //         Assert.IsType<BadRequestResult>(result);
-        //     }
-        //     catch (Exception)
-        //     {
-        //         Assert.Fail("Exception getted");
-        //     }
-
-        // }
-
         [Fact]
         public void AddCard_CorrectData_ReturnsCreatedWithCard()
         {
             // Arrange
             var cardToAdd = new Card()
             {
+                CardListId = 1,
                 FrontSide = "Some Text",
                 BackSide = "Another text"
             };
             var stubRepo = new Mock<ICardRepository>();
-            stubRepo.Setup(repo => repo.AddCard(It.IsAny<Card>())).Returns(cardToAdd);
+            stubRepo.Setup(repo => repo.InsertCard(It.IsAny<Card>())).Returns(cardToAdd);
             var controller = new CardsController(stubRepo.Object);
             string expectedActionName = nameof(controller.GetCardById);
 
@@ -189,7 +157,7 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
                 FrontSide = "Some Text",
             };
             var stubRepo = new Mock<ICardRepository>();
-            stubRepo.Setup(repo => repo.AddCard(It.IsAny<Card>())).Returns<Card>((card) =>
+            stubRepo.Setup(repo => repo.InsertCard(It.IsAny<Card>())).Returns<Card>((card) =>
             {
                 if (card.BackSide == String.Empty || card.FrontSide == String.Empty
                     || card.BackSide == null || card.FrontSide == null)
@@ -199,7 +167,7 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
                 return card;
             });
             var controller = new CardsController(stubRepo.Object);
-            controller.ModelState.AddModelError("key", "Not Valid");
+            controller.ModelState.AddModelError("BackSide", "Backside required");
 
             // Act
             var result = controller.AddCard(cardToAdd);
@@ -218,12 +186,14 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
                 new ()
                 {
                     Id = 1,
+                    CardListId = 1,
                     FrontSide = "SomeSide",
                     BackSide = "AnotherSide"
                 },
                 new ()
                 {
                     Id = 2,
+                    CardListId = 1,
                     FrontSide = "OneSide",
                     BackSide = "OtherSide",
                 }
@@ -248,12 +218,14 @@ namespace FlashCards.Tests.ControllerTests.CardsControllerTests
                 new ()
                 {
                     Id = 1,
+                    CardListId = 1,
                     FrontSide = "SomeSide",
                     BackSide = "AnotherSide"
                 },
                 new ()
                 {
                     Id = 2,
+                    CardListId = 1,
                     FrontSide = "OneSide",
                     BackSide = "OtherSide",
                 }

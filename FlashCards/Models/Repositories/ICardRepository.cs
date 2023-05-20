@@ -4,9 +4,9 @@ public interface ICardRepository
 {
     public IQueryable<Card> Cards { get; }
 
-    public Card AddCard(Card card);
+    public Card InsertCard(Card card);
 
     public Card? UpdateCard(long id, Card card);
 
-    public void RemoveCard(Card card);
+    public void DeleteCard(Card card);
 }

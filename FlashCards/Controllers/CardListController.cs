@@ -39,7 +39,7 @@ namespace FlashCards.Controllers
                 return BadRequest();
             }
 
-            var createdList = repository.AddCardList(list);
+            var createdList = repository.InsertCardList(list);
             return CreatedAtAction(nameof(GetListById),
                 new { id = createdList.Id },
                 createdList);
@@ -65,7 +65,7 @@ namespace FlashCards.Controllers
             var listToRemove = repository.CardLists.FirstOrDefault(list => list.Id == id);
             if (listToRemove != default(CardList))
             {
-                repository.RemoveCardList(listToRemove);
+                repository.DeleteCardList(listToRemove);
                 return Ok();
             }
             return NotFound();

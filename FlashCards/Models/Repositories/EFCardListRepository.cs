@@ -14,14 +14,14 @@ namespace FlashCards.Models.Repositories
 
         public IQueryable<CardList> CardLists => context.CardLists.Include(cardList => cardList.Cards);
 
-        public CardList AddCardList(CardList list)
+        public CardList InsertCardList(CardList list)
         {
             context.Add(list);
             context.SaveChanges();
             return list;
         }
 
-        public void RemoveCardList(CardList list)
+        public void DeleteCardList(CardList list)
         {
             context.Remove(list);
             context.SaveChanges();

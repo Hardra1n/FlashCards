@@ -47,7 +47,7 @@ namespace FlashCards.Controllers
             {
                 return BadRequest();
             }
-            var createdCard = repository.AddCard(card);
+            var createdCard = repository.InsertCard(card);
             return CreatedAtAction(nameof(GetCardById),
                 new { id = createdCard.Id },
                 createdCard);
@@ -60,7 +60,7 @@ namespace FlashCards.Controllers
                 .Cards.FirstOrDefault(card => card.Id == id);
             if (cardToDelete != null)
             {
-                repository.RemoveCard(cardToDelete);
+                repository.DeleteCard(cardToDelete);
                 return Ok();
             }
             return NotFound();

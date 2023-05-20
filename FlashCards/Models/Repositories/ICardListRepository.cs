@@ -5,10 +5,10 @@ namespace FlashCards.Models.Repositories
     {
         IQueryable<CardList> CardLists { get; }
 
-        CardList AddCardList(CardList list);
+        CardList InsertCardList(CardList list);
 
         CardList? UpdateCardList(long id, CardList list);
 
-        void RemoveCardList(CardList list);
+        void DeleteCardList(CardList list);
     }
 }

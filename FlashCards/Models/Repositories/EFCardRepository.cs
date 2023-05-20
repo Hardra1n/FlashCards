@@ -14,10 +14,14 @@ namespace FlashCards.Models.Repositories
 
         public IQueryable<Card> Cards => context.Cards;
 
-        public Card AddCard(Card card)
+        public Card InsertCard(Card card)
         {
-            context.Add(card);
-            context.SaveChanges();
+            var cardList = context.Find<CardList>(card.CardListId);
+            if (cardList != null)
+            {
+                context.Add(card);
+                context.SaveChanges();
+            }
             return card;
         }
 
@@ -32,7 +36,7 @@ namespace FlashCards.Models.Repositories
             return dbCard;
         }
 
-        public void RemoveCard(Card card)
+        public void DeleteCard(Card card)
         {
             context.Remove(card);
             context.SaveChanges();
