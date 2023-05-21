@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace FlashCards.Models
 {
-    public class CardList
+    public class CardList : ModelBase<CardList>
     {
         [BindNever]
         public long Id { get; set; }
@@ -16,5 +16,11 @@ namespace FlashCards.Models
 
         [BindNever]
         public ICollection<Card> Cards { get; } = new List<Card>();
+
+        public override void ShallowCopy(CardList objToCopy)
+        {
+            this.Name = objToCopy.Name;
+            this.Description = objToCopy.Description;
+        }
     }
 }

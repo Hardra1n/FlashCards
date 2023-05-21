@@ -14,6 +14,11 @@ namespace FlashCards.Models.Repositories
 
         public IQueryable<CardList> CardLists => context.CardLists.Include(cardList => cardList.Cards);
 
+        public CardList? GetCardListById(long id)
+            => context.CardLists
+                .Include(cardList => cardList.Cards)
+                .FirstOrDefault(cardList => cardList.Id == id);
+
         public CardList InsertCardList(CardList list)
         {
             context.Add(list);
@@ -29,13 +34,52 @@ namespace FlashCards.Models.Repositories
 
         public CardList? UpdateCardList(long id, CardList list)
         {
-            var listToUpdate = context.Find<CardList>(id);
+            var listToUpdate = GetCardListById(id);
             if (listToUpdate != null)
             {
-                listToUpdate = list;
+                listToUpdate.ShallowCopy(list);
                 context.SaveChanges();
             }
             return listToUpdate;
+        }
+
+        public IQueryable<Card>? GetCards(long cardListId)
+        {
+            return GetCardListById(cardListId)?.Cards.AsQueryable();
+        }
+
+        public Card? InsertCard(Card card)
+        {
+            var cardList = GetCardListById(card.CardListId);
+            if (cardList != null)
+            {
+                var entry = context.Add<Card>(card);
+                context.SaveChanges();
+                return entry.Entity;
+            }
+            return null;
+        }
+
+        public Card? UpdateCard(long cardId, Card card)
+        {
+            var cardList = GetCardListById(card.CardListId);
+            if (cardList != null)
+            {
+                var cardToUpdate = cardList.Cards.FirstOrDefault(card => card.Id == cardId);
+                if (cardToUpdate != null)
+                {
+                    cardToUpdate.ShallowCopy(card);
+                    context.SaveChanges();
+                    return cardToUpdate;
+                }
+            }
+            return null;
+        }
+
+        public void DeleteCard(Card card)
+        {
+            context.Remove<Card>(card);
+            context.SaveChanges();
         }
     }
 }

@@ -24,8 +24,7 @@ namespace FlashCards.Controllers
         [HttpGet("{id}")]
         public IActionResult GetListById(long id)
         {
-            var listToShow = repository.CardLists
-                .FirstOrDefault(list => list.Id == id);
+            var listToShow = repository.GetCardListById(id);
             return listToShow != default(CardList)
                 ? Ok(listToShow)
                 : NotFound();
@@ -62,7 +61,7 @@ namespace FlashCards.Controllers
         [HttpDelete("{id}")]
         public IActionResult RemoveList(long id)
         {
-            var listToRemove = repository.CardLists.FirstOrDefault(list => list.Id == id);
+            var listToRemove = repository.GetCardListById(id);
             if (listToRemove != default(CardList))
             {
                 repository.DeleteCardList(listToRemove);

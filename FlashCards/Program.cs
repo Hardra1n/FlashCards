@@ -16,7 +16,6 @@ builder.Services.AddDbContext<FlashCardsDbContext>(opts =>
     opts.UseSqlServer(builder.Configuration.GetConnectionString("FlashCardsDb"));
 });
 
-builder.Services.AddScoped<ICardRepository, EFCardRepository>();
 builder.Services.AddScoped<ICardListRepository, EFCardListRepository>();
 
 var app = builder.Build();

@@ -1,4 +1,5 @@
 using FlashCards.Models;
+using FlashCards.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlashCards.Controllers
@@ -7,9 +8,10 @@ namespace FlashCards.Controllers
     [ApiController]
     public class CardsController : Controller
     {
-        private ICardRepository repository;
 
-        public CardsController(ICardRepository repo)
+        private ICardListRepository repository;
+
+        public CardsController(ICardListRepository repo)
         {
             repository = repo;
         }
@@ -17,13 +19,16 @@ namespace FlashCards.Controllers
         [HttpGet]
         public IActionResult GetAllCards()
         {
-            return Ok(repository.Cards);
+            // return Ok(repository.Cards);
+            return Ok(repository.CardLists.SelectMany(list => list.Cards));
         }
 
         [HttpGet("{id}")]
         public IActionResult GetCardById(long id)
         {
-            var card = repository.Cards.FirstOrDefault(card => card.Id == id);
+            var card = repository.CardLists
+                .SelectMany(list => list.Cards)
+                .FirstOrDefault(card => card.Id == id);
             return card != null ? Ok(card) : NotFound();
         }
 
@@ -34,6 +39,7 @@ namespace FlashCards.Controllers
             {
                 return BadRequest();
             }
+
             var updatedCard = repository.UpdateCard(id, card);
             return updatedCard != null
                 ? Ok(updatedCard)
@@ -48,16 +54,19 @@ namespace FlashCards.Controllers
                 return BadRequest();
             }
             var createdCard = repository.InsertCard(card);
-            return CreatedAtAction(nameof(GetCardById),
-                new { id = createdCard.Id },
-                createdCard);
+            return createdCard != null
+                ? CreatedAtAction(nameof(GetCardById),
+                    new { id = createdCard.Id },
+                    createdCard)
+                : NotFound();
         }
 
         [HttpDelete("{id}")]
         public IActionResult RemoveCard(long id)
         {
-            var cardToDelete = repository
-                .Cards.FirstOrDefault(card => card.Id == id);
+            var cardToDelete = repository.CardLists
+                .SelectMany(list => list.Cards)
+                .FirstOrDefault(card => card.Id == id);
             if (cardToDelete != null)
             {
                 repository.DeleteCard(cardToDelete);
