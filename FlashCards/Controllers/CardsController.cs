@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FlashCards.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/CardList/{listId}/[controller]")]
     public class CardsController : Controller
     {
 
@@ -17,55 +17,55 @@ namespace FlashCards.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCards()
+        public IActionResult GetAllCards(long listId)
         {
-            // return Ok(repository.Cards);
-            return Ok(repository.CardLists.SelectMany(list => list.Cards));
+            var cards = repository.GetCards(listId);
+            return cards != null ? Ok(cards) : NotFound(cards);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetCardById(long id)
+        public IActionResult GetCardById(long listId, long id)
         {
-            var card = repository.CardLists
-                .SelectMany(list => list.Cards)
+            var card = repository
+                .GetCards(listId)?
                 .FirstOrDefault(card => card.Id == id);
             return card != null ? Ok(card) : NotFound();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCard(long id, Card card)
+        public IActionResult UpdateCard(long listId, long id, Card card)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var updatedCard = repository.UpdateCard(id, card);
+            var updatedCard = repository.UpdateCard(listId, id, card);
             return updatedCard != null
                 ? Ok(updatedCard)
                 : NotFound();
         }
 
         [HttpPost]
-        public IActionResult AddCard(Card card)
+        public IActionResult AddCard(long listId, Card card)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            var createdCard = repository.InsertCard(card);
+            var createdCard = repository.InsertCard(listId, card);
             return createdCard != null
                 ? CreatedAtAction(nameof(GetCardById),
-                    new { id = createdCard.Id },
+                    new { listId = listId, id = createdCard.Id },
                     createdCard)
                 : NotFound();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult RemoveCard(long id)
+        public IActionResult RemoveCard(long listId, long id)
         {
-            var cardToDelete = repository.CardLists
-                .SelectMany(list => list.Cards)
+            var cardToDelete = repository
+                .GetCards(listId)?
                 .FirstOrDefault(card => card.Id == id);
             if (cardToDelete != null)
             {

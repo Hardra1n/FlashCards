@@ -15,9 +15,9 @@ namespace FlashCards.Models.Repositories
 
         public IQueryable<Card>? GetCards(long cardListId);
 
-        public Card? InsertCard(Card card);
+        public Card? InsertCard(long listId, Card card);
 
-        public Card? UpdateCard(long cardId, Card card);
+        public Card? UpdateCard(long listId, long cardId, Card card);
 
         public void DeleteCard(Card card);
     }

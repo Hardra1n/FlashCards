@@ -48,21 +48,21 @@ namespace FlashCards.Models.Repositories
             return GetCardListById(cardListId)?.Cards.AsQueryable();
         }
 
-        public Card? InsertCard(Card card)
+        public Card? InsertCard(long listId, Card card)
         {
-            var cardList = GetCardListById(card.CardListId);
+            var cardList = GetCardListById(listId);
             if (cardList != null)
             {
-                var entry = context.Add<Card>(card);
+                cardList.Cards.Add(card);
                 context.SaveChanges();
-                return entry.Entity;
+                return card;
             }
             return null;
         }
 
-        public Card? UpdateCard(long cardId, Card card)
+        public Card? UpdateCard(long listId, long cardId, Card card)
         {
-            var cardList = GetCardListById(card.CardListId);
+            var cardList = GetCardListById(listId);
             if (cardList != null)
             {
                 var cardToUpdate = cardList.Cards.FirstOrDefault(card => card.Id == cardId);
