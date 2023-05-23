@@ -1,3 +1,4 @@
+using FlashCards;
 using FlashCards.Data;
 using FlashCards.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -31,5 +32,5 @@ if (app.Environment.IsDevelopment())
 
 
 app.MapControllers();
-
+DbInitializer.Initialize(app);
 app.Run();
