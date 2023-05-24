@@ -1,0 +1,21 @@
+services:
+  back.api:
+    image: flashcardsapi
+    build:
+      context: FlashCards
+      dockerfile: Dockerfile
+    depends_on:
+      - db.flashcards
+    expose:
+      - 5000
+    ports:
+      - "5000:5000"
+  db.flashcards:
+    image: mcr.microsoft.com/mssql/server
+    expose:
+      - 1433
+    ports:
+      - "5001:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Secret123
