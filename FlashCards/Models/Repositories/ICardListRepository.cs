@@ -3,7 +3,9 @@ namespace FlashCards.Models.Repositories
 {
     public interface ICardListRepository
     {
-        IQueryable<CardList> CardLists { get; }
+        // IQueryable<CardList> CardLists { get; }
+
+        IEnumerable<CardList> GetCardLists();
 
         CardList? GetCardListById(long id);
 

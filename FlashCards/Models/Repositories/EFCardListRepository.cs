@@ -12,7 +12,11 @@ namespace FlashCards.Models.Repositories
             context = ctx;
         }
 
-        public IQueryable<CardList> CardLists => context.CardLists.Include(cardList => cardList.Cards);
+        // public IQueryable<CardList> CardLists => context.CardLists.Include(cardList => cardList.Cards);
+        // public IQueryable<CardList> CardLists => context.CardLists;
+
+
+        public IEnumerable<CardList> GetCardLists() => context.CardLists;
 
         public CardList? GetCardListById(long id)
             => context.CardLists

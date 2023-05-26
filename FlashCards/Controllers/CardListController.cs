@@ -18,7 +18,7 @@ namespace FlashCards.Controllers
         [HttpGet]
         public IActionResult GetAllLists()
         {
-            return Ok(repository.CardLists);
+            return Ok(repository.GetCardLists());
         }
 
         [HttpGet("{id}")]
