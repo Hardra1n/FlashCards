@@ -1,0 +1,33 @@
+@using MVC.Models;
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <h1>Card Lists:</h1>
+    <ul>
+        @foreach (CardList list in Model)
+        {
+            <li>ID: @list.Id</li>
+            <li>Name: @list.Name</li>
+            <li>Description: @list.Description</li>
+            @foreach (Card card in list.Cards)
+            {
+                <li>
+                    <ul>
+                        <li>id: @card.Id</li>
+                        <li>FrontSide: @card.FrontSide</li>
+                        <li>BackSide: @card.BackSide</li>
+                    </ul>
+                </li>
+                <br>
+            }
+            <br>
+        }
+    </ul>
+</body>
+
+</html>
