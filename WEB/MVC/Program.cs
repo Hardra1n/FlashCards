@@ -11,6 +11,8 @@ builder.Services.AddHttpClient<FlashCardsClient>((client) =>
 
 var app = builder.Build();
 
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.MapControllers();

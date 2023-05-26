@@ -1,0 +1,18 @@
+@model CardList
+<ul class="container-fluid">
+    <li>ID: @Model.Id</li>
+    <li>Name: @Model.Name</li>
+    <li>Description: @Model.Description</li>
+    @foreach (Card card in Model.Cards)
+    {
+        <li>
+            <ul>
+                <li>id: @card.Id</li>
+                <li>FrontSide: @card.FrontSide</li>
+                <li>BackSide: @card.BackSide</li>
+            </ul>
+        </li>
+        <br>
+    }
+    <br>
+</ul>
