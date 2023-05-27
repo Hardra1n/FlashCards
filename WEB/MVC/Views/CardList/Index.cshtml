@@ -2,8 +2,18 @@
 @{
     ViewData["Title"] = "Card list catalog";
 }
-<h1>Card Lists:</h1>
-@foreach (CardList list in Model)
-{
-    @await Html.PartialAsync("_CardListPartial", list)
-}
+
+<h1 class="text-center">Card Lists:</h1>
+<div class="container-fluid ps-4">
+    <button class="btn btn-primary" style="min-width: 25%">Add new list</button>
+</div>
+<ul class="list-group mx-4 my-2">
+    @foreach (CardList list in Model)
+    {
+
+        <li class="list-group-item list-group-item-action rounded-3">
+            @await Html.PartialAsync("_CardListPartial", list)
+        </li>
+        <br>
+    }
+</ul>
