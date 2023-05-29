@@ -1,0 +1,8 @@
+@model CardList
+<form id="modify-card-list" asp-controller="CardListController" method="post">
+    <input id="card-list-id" type="hidden" asp-for="Id" />
+    <label asp-for="Name" class="form-label"></label>
+    <input id="card-list-name" asp-for="Name" class="form-control" />
+    <label asp-for="Description" class="form-label"></label>
+    <input id="card-list-description" asp-for="Description" class="form-control" />
+</form>

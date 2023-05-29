@@ -1,11 +1,31 @@
 @model IEnumerable<CardList>
 @{
     ViewData["Title"] = "Card list catalog";
+    CardList cardListPattern = new CardList();
 }
+<div class="modal" tabindex="-1" id="cardListModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Iterations with card list</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("_CardListFormPartial", cardListPattern)
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="modify-card-list" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <h1 class="text-center">Card Lists:</h1>
 <div class="container-fluid ps-4">
-    <button class="btn btn-primary" style="min-width: 25%">Add new list</button>
+    <button class="btn btn-primary" style="min-width: 25%" data-bs-toggle="modal" data-bs-target="#cardListModal">
+        Add new list
+    </button>
 </div>
 <ul class="list-group mx-4 my-2">
     @foreach (CardList list in Model)
@@ -17,3 +37,31 @@
         <br>
     }
 </ul>
+
+<script>
+    const exampleModal = document.getElementById('cardListModal')
+    if (exampleModal) {
+        exampleModal.addEventListener('show.bs.modal', event => {
+            // Button that triggered the modal
+            const button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            const id = button.getAttribute('data-bs-id')
+            const name = button.getAttribute('data-bs-name')
+            const description = button.getAttribute('data-bs-description')
+
+            const modalNameInput = exampleModal.querySelector("#card-list-name")
+            const modalDescriptionInput = exampleModal.querySelector("#card-list-description")
+            const modalFormElem = exampleModal.querySelector("#modify-card-list")
+
+            // Set method according to which button is pressed
+            if (button.getAttribute("id") === "update-card-list") {
+                modalFormElem.setAttribute("method", "put")
+            } else {
+                modalFormElem.setAttribute("method", "post")
+            }
+            modalNameInput.value = name;
+            modalDescriptionInput.value = description;
+
+        })
+    }
+</script>
