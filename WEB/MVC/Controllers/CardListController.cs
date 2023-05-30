@@ -28,10 +28,17 @@ namespace MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(long id, CardList list)
+        [HttpPost("{id}")]
+        public async Task<ActionResult> Update(long id, [FromForm] CardList list)
         {
             await _client.UpdateAsyncCardList(id, list);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Route("{id}")]
+        public async Task<ActionResult> Delete(long id)
+        {
+            await _client.RemoveAsyncCardList(id);
             return RedirectToAction(nameof(Index));
         }
     }

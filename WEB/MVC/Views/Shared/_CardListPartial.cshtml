@@ -10,8 +10,11 @@
             data-bs-method="put">
             <img src="/images/pen-solid.svg" alt="Icon to update data" width="35px">
         </button>
-        <button class="btn">
+        @* <button class="btn">
+        <img src="/images/dumpster-solid.svg" alt="Icon to delete data" width="35px">
+        </button> *@
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn d-flex">
             <img src="/images/dumpster-solid.svg" alt="Icon to delete data" width="35px">
-        </button>
+        </a>
     </div>
 </div>
