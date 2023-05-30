@@ -15,7 +15,7 @@ namespace MVC.Models
         [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Description { get; set; } = String.Empty;
 
-        public ICollection<Card> Cards { get; set; } = new List<Card>();
+        public IEnumerable<Card> Cards { get; set; } = new List<Card>();
 
     }
 }

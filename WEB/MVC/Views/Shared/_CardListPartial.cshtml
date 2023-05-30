@@ -5,14 +5,14 @@
         <span>@Model.Description<span>
     </div>
     <div class="d-flex">
+        <a asp-controller="Card" asp-action="Index" asp-route-id="@Model.Id" class="btn d-flex">
+            <img src="/images/eye-solid.svg" alt="Icon to view card list" width="35px">
+        </a>
         <button id="update-card-list" class="btn" data-bs-toggle="modal" data-bs-target="#cardListModal"
             data-bs-id="@Model.Id" data-bs-name="@Model.Name" data-bs-description="@Model.Description"
             data-bs-method="put">
             <img src="/images/pen-solid.svg" alt="Icon to update data" width="35px">
         </button>
-        @* <button class="btn">
-        <img src="/images/dumpster-solid.svg" alt="Icon to delete data" width="35px">
-        </button> *@
         <a asp-action="Delete" asp-route-id="@Model.Id" class="btn d-flex">
             <img src="/images/dumpster-solid.svg" alt="Icon to delete data" width="35px">
         </a>

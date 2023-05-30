@@ -1,0 +1,11 @@
+@model CardList
+
+<h2>Card list name: @Model?.Name</h2>
+<h3>Description: @Model?.Description</h3>
+
+@foreach (Card card in Model!.Cards)
+{
+    <p>@card.FrontSide</p>
+    <p>@card.BackSide</p>
+    <br>
+}
