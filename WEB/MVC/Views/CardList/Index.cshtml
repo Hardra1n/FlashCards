@@ -55,9 +55,9 @@
 
             // Set method according to which button is pressed
             if (button.getAttribute("id") === "update-card-list") {
-                modalFormElem.setAttribute("action", "/CardList/" + id)
+                modalFormElem.setAttribute("action", "CardList/Update/" + id)
             } else {
-                modalFormElem.setAttribute("action", '')
+                modalFormElem.setAttribute("action", 'CardList/Create')
             }
             modalNameInput.value = name;
             modalDescriptionInput.value = description;

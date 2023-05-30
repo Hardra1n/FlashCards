@@ -15,6 +15,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.MapControllers();
+// app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=CardList}/{action=Index}/{id?}");
 
 app.Run();
