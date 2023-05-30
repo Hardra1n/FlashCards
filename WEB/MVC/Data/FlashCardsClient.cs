@@ -46,7 +46,7 @@ namespace MVC.Data
             return null;
         }
 
-        public async Task<bool> RemoveAsyncCardList(long id)
+        public async Task<bool> DeleteAsyncCardList(long id)
         {
             HttpResponseMessage response = await _httpClient.DeleteAsync(
                 GetCardListEndpointURI(id.ToString()));

@@ -38,7 +38,7 @@ namespace MVC.Controllers
         [Route("{id}")]
         public async Task<ActionResult> Delete(long id)
         {
-            await _client.RemoveAsyncCardList(id);
+            await _client.DeleteAsyncCardList(id);
             return RedirectToAction(nameof(Index));
         }
     }
