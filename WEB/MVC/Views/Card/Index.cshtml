@@ -1,11 +1,23 @@
 @model CardList
+<h2 class="text-center">@Model?.Name</h2>
+<h3>@Model?.Description</h3>
 
-<h2>Card list name: @Model?.Name</h2>
-<h3>Description: @Model?.Description</h3>
-
-@foreach (Card card in Model!.Cards)
-{
-    <p>@card.FrontSide</p>
-    <p>@card.BackSide</p>
-    <br>
-}
+<div>
+    <a asp-action="Editor" asp-route-id="@Model?.Id">Add new</a>
+</div>
+<ul class="list-group">
+    @foreach (Card card in Model!.Cards)
+    {
+        <li class="list-group-item">
+            <p>@card.FrontSide</p>
+            <p>@card.BackSide</p>
+            <form asp-action="Editor" asp-route-id="@Model.Id">
+                <input type="hidden" asp-for="@card.Id" name="Id">
+                <input type="hidden" asp-for="@card.FrontSide" name="FrontSide">
+                <input type="hidden" asp-for="@card.BackSide" name="BackSide">
+                <button class="btn" type="submit">Update</button>
+            </form>
+            <a class="btn" asp-action="Delete" asp-route-id="@Model.Id" asp-route-card-id="@card.Id">Delete</a>
+        </li>
+    }
+</ul>

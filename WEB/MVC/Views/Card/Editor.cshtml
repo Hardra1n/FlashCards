@@ -1,0 +1,12 @@
+@model CardViewModel
+@{
+    string actionName = Model.Card == null ? "Create" : "Update";
+}
+<form id="edit-card-form" asp-controller="Card" asp-action="@actionName" method="post" asp-route-id="@Model.listId"
+    asp-route-card-id="@Model.Card?.Id">
+    <label asp-for="@Model.Card!.FrontSide" name="FrontSide"></label>
+    <input asp-for="@Model.Card!.FrontSide" name="FrontSide" />
+    <label asp-for="@Model.Card!.BackSide" name="BackSide"></label>
+    <input asp-for="@Model.Card!.BackSide" name="BackSide" />
+    <button type="submit" form="edit-card-form">Submit</button>
+</form>

@@ -24,29 +24,36 @@ namespace MVC.Controllers
             return View(list);
         }
 
+        public ActionResult Editor([FromRoute(Name = "id")] long listId, [FromForm] Card card)
+        {
+            CardViewModel viewModel = new() { listId = listId };
+            viewModel.Card = card.Id == default(long) ? null : card;
+            return View(viewModel);
+        }
+
         public async Task<ActionResult> Create(
-            [FromRoute(Name = "id")] long listId,
-            [FromForm] Card card)
+                [FromRoute(Name = "id")] long listId,
+                [FromForm] Card card)
         {
             await _client.CreateCard(listId, card);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { id = listId });
         }
 
         public async Task<ActionResult> Update(
-            [FromRoute] long listId,
-            [FromRoute] long cardId,
+            [FromRoute(Name = "id")] long listId,
+            [FromQuery(Name = "card-id")] long cardId,
             [FromForm] Card card)
         {
             await _client.UpdateAsyncCard(listId, cardId, card);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { id = listId });
         }
 
         public async Task<ActionResult> Delete(
-            [FromRoute] long listId,
-            [FromRoute] long cardId)
+            [FromRoute(Name = "id")] long listId,
+            [FromQuery(Name = "card-id")] long cardId)
         {
             await _client.DeleteAsyncCard(listId, cardId);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { id = listId });
         }
     }
 }
