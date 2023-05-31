@@ -1,23 +1,33 @@
 @model CardList
-<h2 class="text-center">@Model?.Name</h2>
-<h3>@Model?.Description</h3>
+<div class="p-2">
+    <h2 class="display-1">@Model?.Name</h2>
+    <h6 class="fw-light">@Model?.Description</h6>
+</div>
 
-<div>
-    <a asp-action="Editor" asp-route-id="@Model?.Id">Add new</a>
+<div class="p-2">
+    <a asp-action="Editor" asp-route-id="@Model?.Id" class="btn btn-primary" style="min-width: 25%">Add new</a>
 </div>
 <ul class="list-group">
     @foreach (Card card in Model!.Cards)
     {
-        <li class="list-group-item">
-            <p>@card.FrontSide</p>
-            <p>@card.BackSide</p>
-            <form asp-action="Editor" asp-route-id="@Model.Id">
+        <li class="list-group-item py-1 px-2 my-1 mx-2 d-flex gap-3 flex-column justify-content-between flex-sm-row ">
+            @* <div class="d-flex flex-column text-truncate"> *@
+            <div class="d-inline-flex flex-column text-break float-end">
+                <p class="p-2 my-2 border rounded text-justify">@card.FrontSide</p>
+                <p class="p-2 my-2 border rounded text-justify">@card.BackSide</p>
+            </div>
+            <form class="position-absolute" id="update-card-@card.Id" asp-action="Editor" asp-route-id="@Model.Id">
                 <input type="hidden" asp-for="@card.Id" name="Id">
                 <input type="hidden" asp-for="@card.FrontSide" name="FrontSide">
                 <input type="hidden" asp-for="@card.BackSide" name="BackSide">
-                <button class="btn" type="submit">Update</button>
             </form>
-            <a class="btn" asp-action="Delete" asp-route-id="@Model.Id" asp-route-card-id="@card.Id">Delete</a>
+            <div class="d-flex flex-nowrap justify-content-end align-content-start gap-1">
+                <button class="btn btn-warning" style="height: fit-content" form="update-card-@card.Id"
+                    type="submit">Change</button>
+                <a class="btn btn-danger" style="height: fit-content" asp-action="Delete" asp-route-id="@Model.Id"
+                    asp-route-card-id="@card.Id">Delete</a>
+            </div>
+            @* </div> *@
         </li>
     }
 </ul>
