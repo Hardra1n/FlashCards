@@ -2,11 +2,41 @@
 @{
     string actionName = Model.Card == null ? "Create" : "Update";
 }
-<form id="edit-card-form" asp-controller="Card" asp-action="@actionName" method="post" asp-route-id="@Model.listId"
-    asp-route-card-id="@Model.Card?.Id">
-    <label asp-for="@Model.Card!.FrontSide" name="FrontSide"></label>
-    <input asp-for="@Model.Card!.FrontSide" name="FrontSide" />
-    <label asp-for="@Model.Card!.BackSide" name="BackSide"></label>
-    <input asp-for="@Model.Card!.BackSide" name="BackSide" />
-    <button type="submit" form="edit-card-form">Submit</button>
-</form>
+<div class="m-3 d-flex flex-column align-items-center">
+    <h1 class="mb-3 display-3">@actionName card</h1>
+    <form id="edit-card-form" asp-controller="Card" asp-action="@actionName" method="post" asp-route-id="@Model.listId"
+        asp-route-card-id="@Model.Card?.Id" class="container-fluid">
+        <div class="mb-3">
+            <label asp-for="@Model.Card!.FrontSide" name="FrontSide" class="form-label"></label>
+            <textarea asp-for="@Model.Card!.FrontSide" name="FrontSide" class="form-control"
+                onkeyup="resizeTextArea(this)" style="resize: none;"></textarea>
+        </div>
+        <div class="mb-3">
+            <label asp-for="@Model.Card!.BackSide" name="BackSide" class="form-label"></label>
+            <textarea asp-for="@Model.Card!.BackSide" name="BackSide" class="form-control"
+                onkeyup="resizeTextArea(this)" style="resize: none;"></textarea>
+        </div>
+    </form>
+
+    <div class="btn-group" style="min-width: 50%;">
+        <button type=" submit" form="edit-card-form" class="btn btn-primary">@actionName</button>
+        <a asp-action="Index" asp-route-id="@Model.listId" class="btn btn-secondary">Go
+            back</a>
+    </div>
+</div>
+
+<script>
+    resizeEachTextArea();
+
+    function resizeEachTextArea() {
+        document.querySelectorAll("textarea.form-control").forEach((elem) => {
+            resizeTextArea(elem);
+        })
+    }
+
+    function resizeTextArea(elem) {
+        elem.style.height = "1px"
+        var scrollHeight = elem.scrollHeight + 10;
+        elem.style.height = scrollHeight + "px"
+    }
+</script>
