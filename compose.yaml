@@ -1,4 +1,17 @@
 services:
+  ui.mvc:
+    image: flashcardsuimvc
+    build:
+      context: WEB/MVC
+      dockerfile: Dockerfile
+    depends_on:
+      - back.api
+    expose:
+      - 5001
+    ports:
+      - "5001:5001"
+    environment:
+      - ConnectionStrings_FlashCardsAPI="back.api:5000"
   back.api:
     image: flashcardsapi
     build:
@@ -10,12 +23,20 @@ services:
       - 5000
     ports:
       - "5000:5000"
+    environment:
+      - ConnectionStrings__FlashCardsDb="Server=db.flashcards;Database=FlashCardsDb;MultipleActiveResultSets=true;User Id=sa;Password=Secret123;TrustServerCertificate=true"
   db.flashcards:
     image: mcr.microsoft.com/mssql/server
     expose:
       - 1433
     ports:
-      - "5001:1433"
+      - "4999:1433"
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=Secret123
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Secret123" -Q "SELECT 1" -b -o /dev/null
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
