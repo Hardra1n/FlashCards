@@ -8,5 +8,13 @@ namespace SpacedRep.Data
         public SpacedRepDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Repetition> Repititions => Set<Repetition>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Repetition>()
+                .Property(obj => obj.Stage)
+                .HasConversion<string>();
+
+        }
     }
 }

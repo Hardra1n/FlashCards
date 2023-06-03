@@ -7,7 +7,14 @@ namespace SpacedRep.Models
         public long Id { get; set; }
 
         [Required]
-        public DateTime Created { get; set; }
+        public DateTime CreatedOn { get; set; }
+
+        [Required]
+        public RepetitionStage Stage { get; set; }
+
+        public DateTime? LastReviewOn { get; set; } = null;
+
+        public DateTime? BlockedUntil { get; set; } = null;
 
     }
 }

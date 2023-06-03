@@ -19,9 +19,9 @@ namespace SpacedRep.Data
             {
                 Repetition[] reps = new[]
                 {
-                    new Repetition() {Created = DateTime.Now},
-                    new Repetition() {Created = new DateTime(2022, 6, 3) },
-                    new Repetition() {Created = new DateTime(2024, 6, 3) },
+                    new Repetition() {CreatedOn = DateTime.Now, Stage = RepetitionStage.Created},
+                    new Repetition() {CreatedOn = new DateTime(2022, 6, 3), Stage = RepetitionStage.OnStudy },
+                    new Repetition() {CreatedOn = new DateTime(2024, 6, 3), Stage = RepetitionStage.Archived },
                 };
                 context.AddRange(reps);
                 context.SaveChanges();
