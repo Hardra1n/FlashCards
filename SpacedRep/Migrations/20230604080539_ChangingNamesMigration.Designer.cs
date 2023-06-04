@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpacedRep.Data;
 
@@ -11,9 +12,11 @@ using SpacedRep.Data;
 namespace SpacedRep.Migrations
 {
     [DbContext(typeof(SpacedRepDbContext))]
-    partial class SpacedRepDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230604080539_ChangingNamesMigration")]
+    partial class ChangingNamesMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

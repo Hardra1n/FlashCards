@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SpacedRep.Data;
+using SpacedRep.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.AddDbContext<SpacedRepDbContext>((opts) =>
 {
     opts.UseSqlServer(builder.Configuration.GetConnectionString("SpacedRepDb"));
 });
+
+builder.Services.AddScoped<IRepetitionRepository, EFRepetitionRepository>();
 
 builder.Services.AddControllers();
 

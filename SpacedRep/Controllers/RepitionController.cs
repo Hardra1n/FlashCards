@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SpacedRep.Data;
+using SpacedRep.Models;
 
 namespace SpacedRep.Controllers
 {
@@ -7,17 +8,41 @@ namespace SpacedRep.Controllers
     [Route("api/[controller]")]
     public class RepititionController : ControllerBase
     {
-        private SpacedRepDbContext _context;
+        private IRepetitionRepository _repo;
 
-        public RepititionController(SpacedRepDbContext context)
+        public RepititionController(IRepetitionRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAll()
+        public ActionResult GetAll() => Ok(_repo.Read());
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetById(long id)
         {
-            return Ok(_context.Repititions.AsEnumerable());
+            var result = await _repo.ReadAsync(id);
+            return result != null ? Ok(result.ToReadDto()) : NotFound();
         }
+
+        [HttpPost]
+        public async Task<ActionResult> Create()
+        {
+            var result = await _repo.CreateAsync();
+            return result != null
+                ? CreatedAtAction(nameof(GetById), new { id = result.Id }, result)
+                : BadRequest();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Update(RepetitionUpdateDto dto)
+        {
+            var result = await _repo.UpdateAsync(dto.ToRepetition());
+            return result != null ? Ok(result) : NotFound();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(long id)
+            => await _repo.DeleteAsync(id) ? Ok() : NotFound();
     }
 }

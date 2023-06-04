@@ -7,7 +7,7 @@ namespace SpacedRep.Data
     {
         public SpacedRepDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<Repetition> Repititions => Set<Repetition>();
+        public DbSet<Repetition> Repetitions => Set<Repetition>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

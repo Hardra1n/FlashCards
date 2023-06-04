@@ -15,13 +15,13 @@ namespace SpacedRep.Data
                 context.Database.Migrate();
             }
 
-            if (context.Repititions.Count() == 0)
+            if (context.Repetitions.Count() == 0)
             {
                 Repetition[] reps = new[]
                 {
-                    new Repetition() {CreatedOn = DateTime.Now, Stage = RepetitionStage.Created},
-                    new Repetition() {CreatedOn = new DateTime(2022, 6, 3), Stage = RepetitionStage.OnStudy },
-                    new Repetition() {CreatedOn = new DateTime(2024, 6, 3), Stage = RepetitionStage.Archived },
+                    new Repetition() { Stage = RepetitionStage.Created },
+                    new Repetition() { Stage = RepetitionStage.OnStudy },
+                    new Repetition() { Stage = RepetitionStage.Archived },
                 };
                 context.AddRange(reps);
                 context.SaveChanges();
