@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewUI", "WEB\MVC\ViewUI.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpacedRep", "SpacedRep\SpacedRep.csproj", "{A460634C-8781-4DF7-B317-466CF50E5C09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{F3EE87DF-0478-4149-BDD5-14F3AED14F6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{A460634C-8781-4DF7-B317-466CF50E5C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A460634C-8781-4DF7-B317-466CF50E5C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A460634C-8781-4DF7-B317-466CF50E5C09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3EE87DF-0478-4149-BDD5-14F3AED14F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3EE87DF-0478-4149-BDD5-14F3AED14F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3EE87DF-0478-4149-BDD5-14F3AED14F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3EE87DF-0478-4149-BDD5-14F3AED14F6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1E012238-9FB6-4D02-8142-A8589D29CB0B} = {5F343D05-5027-4986-9DC2-02D8DE98EE33}
