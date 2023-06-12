@@ -1,4 +1,4 @@
-namespace Common;
+namespace Common.RpcClient;
 
 public class RpcClientConfiguration
 {

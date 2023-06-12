@@ -1,11 +1,17 @@
+using Common;
 using FlashCards;
 using FlashCards.Data;
 using FlashCards.Models.Repositories;
+using FlashCards.RpcClients;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddEnvironmentVariables();
+builder.Configuration
+    .SetBasePath(Directory.GetParent(Directory.GetCurrentDirectory())!.ToString())
+    .AddJsonFile("Common/RpcClients.json")
+    .AddJsonFile("Common/RpcClients.Development.json")
+    .AddEnvironmentVariables();
 
 // Add services to the container.
 

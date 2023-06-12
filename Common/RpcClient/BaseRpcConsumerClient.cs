@@ -4,12 +4,12 @@ using RabbitMQ.Client.Events;
 
 namespace Common.RpcClient;
 
-public abstract class BaseConsumerRpcClient : BaseRpcClient
+public abstract class BaseRpcConsumerClient : BaseRpcClient
 {
     protected IDictionary<string, Action<BasicDeliverEventArgs>> HandlerDictionary
      = new Dictionary<string, Action<BasicDeliverEventArgs>>();
 
-    public BaseConsumerRpcClient(RpcClientConfiguration configuration) : base(configuration)
+    public BaseRpcConsumerClient(RpcClientConfiguration configuration) : base(configuration)
     {
         PopulateHandlerDictianary();
 
@@ -46,5 +46,11 @@ public abstract class BaseConsumerRpcClient : BaseRpcClient
         var props = Channel.CreateBasicProperties();
         props.CorrelationId = ea.BasicProperties.CorrelationId;
         Channel.BasicPublish(string.Empty, ea.BasicProperties.ReplyTo, false, props, body);
+    }
+
+    [ConsumeHandler("ping")]
+    public void PingHandler(BasicDeliverEventArgs ea)
+    {
+        SendResponse(ea, ea.Body.ToArray());
     }
 }

@@ -1,0 +1,10 @@
+{
+    "FlashCards": {
+        "HostName": "",
+        "QueueName": "flash-card-queue"
+    },
+    "SpacedRep": {
+        "HostName": "",
+        "QueueName": "spaced-rep-queue"
+    }
+}

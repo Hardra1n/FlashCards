@@ -1,11 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using SpacedRep.Data;
 using SpacedRep.Models;
+using SpacedRep.RpcClients;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddEnvironmentVariables();
-// Add services to the container.
+builder.Configuration
+    .SetBasePath(Directory.GetParent(Directory.GetCurrentDirectory())!.ToString())
+    .AddJsonFile("Common/RpcClients.json")
+    .AddJsonFile("Common/RpcClients.Development.json")
+    .AddEnvironmentVariables();
 
 builder.Services.AddDbContext<SpacedRepDbContext>((opts) =>
 {
@@ -30,5 +34,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 DbInitializer.Initialize(app);
-
 app.Run();

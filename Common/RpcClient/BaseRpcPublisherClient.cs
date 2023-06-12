@@ -4,14 +4,14 @@ using RabbitMQ.Client.Events;
 
 namespace Common.RpcClient;
 
-public abstract class BasePublisherRpcClient : BaseRpcClient
+public abstract class BaseRpcPublisherClient : BaseRpcClient
 {
     private readonly string _consumerQueueName;
 
     protected ConcurrentDictionary<string, TaskCompletionSource<Byte[]>> taskCollection
         = new ConcurrentDictionary<string, TaskCompletionSource<Byte[]>>();
 
-    public BasePublisherRpcClient(RpcClientConfiguration configuration) : base(configuration)
+    public BaseRpcPublisherClient(RpcClientConfiguration configuration) : base(configuration)
     {
         var consumer = new EventingBasicConsumer(Channel);
         consumer.Received += ConsumeHandler;
@@ -49,5 +49,12 @@ public abstract class BasePublisherRpcClient : BaseRpcClient
         {
             value.SetResult(ea.Body.ToArray());
         }
+    }
+
+    public async Task<bool> Ping()
+    {
+        var body = Encoder.GetBytes(Guid.NewGuid().ToString());
+        var response = await SendRepliableMessage(body, "ping");
+        return Encoder.GetString(body) == Encoder.GetString(response);
     }
 }
