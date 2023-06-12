@@ -9,7 +9,7 @@ public abstract class BaseConsumerRpcClient : BaseRpcClient
     protected IDictionary<string, Action<BasicDeliverEventArgs>> HandlerDictionary
      = new Dictionary<string, Action<BasicDeliverEventArgs>>();
 
-    public BaseConsumerRpcClient(string hostname, string queueName) : base(hostname, queueName)
+    public BaseConsumerRpcClient(RpcClientConfiguration configuration) : base(configuration)
     {
         PopulateHandlerDictianary();
 
@@ -17,7 +17,7 @@ public abstract class BaseConsumerRpcClient : BaseRpcClient
         consumer.Received += ConsumeFromMethodHeader;
 
         Channel.BasicConsume(
-            queue: queueName,
+            queue: QueueName,
             autoAck: true,
             consumer: consumer);
     }

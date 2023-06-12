@@ -11,7 +11,7 @@ public abstract class BasePublisherRpcClient : BaseRpcClient
     protected ConcurrentDictionary<string, TaskCompletionSource<Byte[]>> taskCollection
         = new ConcurrentDictionary<string, TaskCompletionSource<Byte[]>>();
 
-    public BasePublisherRpcClient(string hostname, string queueName) : base(hostname, queueName)
+    public BasePublisherRpcClient(RpcClientConfiguration configuration) : base(configuration)
     {
         var consumer = new EventingBasicConsumer(Channel);
         consumer.Received += ConsumeHandler;

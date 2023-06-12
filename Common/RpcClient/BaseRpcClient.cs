@@ -15,15 +15,15 @@ public abstract class BaseRpcClient : IDisposable
 
     protected Encoding Encoder { get; set; } = Encoding.UTF8;
 
-    public BaseRpcClient(string hostname, string queueName)
+    public BaseRpcClient(RpcClientConfiguration configuration)
     {
-        QueueName = queueName;
-        var factory = new ConnectionFactory() { HostName = hostname };
+        QueueName = configuration.QueueName;
+        var factory = new ConnectionFactory() { HostName = configuration.HostName };
         Connection = factory.CreateConnection();
         Channel = Connection.CreateModel();
 
         Channel.QueueDeclare(
-            queue: queueName,
+            queue: QueueName,
             durable: false,
             exclusive: false,
             autoDelete: false,
