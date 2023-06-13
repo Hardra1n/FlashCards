@@ -12,74 +12,77 @@ namespace FlashCards.Models.Repositories
             context = ctx;
         }
 
-        public IEnumerable<CardList> GetCardLists() => context.CardLists;
+        public async Task<IEnumerable<CardList>> GetCardLists()
+            => await Task.Run(() => context.CardLists);
 
-        public CardList? GetCardListById(long id)
-            => context.CardLists
-                .Include(cardList => cardList.Cards)
-                .FirstOrDefault(cardList => cardList.Id == id);
-
-        public CardList InsertCardList(CardList list)
+        public async Task<CardList?> GetCardListById(long id)
         {
-            context.Add(list);
-            context.SaveChanges();
-            return list;
+            return await Task.Run(() =>
+                context.CardLists
+                    .Include(cardList => cardList.Cards)
+                    .FirstOrDefault(cardList => cardList.Id == id));
         }
 
-        public void DeleteCardList(CardList list)
+        public async Task<CardList?> InsertCardList(CardList list)
+        {
+            var entity = await context.AddAsync(list);
+            await context.SaveChangesAsync();
+            return entity.Entity;
+        }
+
+        public async void DeleteCardList(CardList list)
         {
             context.Remove(list);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
-        public CardList? UpdateCardList(long id, CardList list)
+        public async Task<CardList?> UpdateCardList(long id, CardList list)
         {
-            var listToUpdate = GetCardListById(id);
+            var listToUpdate = await GetCardListById(id);
             if (listToUpdate != null)
             {
                 listToUpdate.ShallowCopy(list);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
             return listToUpdate;
         }
 
-        public IQueryable<Card>? GetCards(long cardListId)
-        {
-            return GetCardListById(cardListId)?.Cards.AsQueryable();
-        }
+        public async Task<IQueryable<Card>?> GetCards(long cardListId)
+            => (await GetCardListById(cardListId))?.Cards.AsQueryable();
 
-        public Card? InsertCard(long listId, Card card)
+
+        public async Task<Card?> InsertCard(long listId, Card card)
         {
-            var cardList = GetCardListById(listId);
+            var cardList = await GetCardListById(listId);
             if (cardList != null)
             {
                 cardList.Cards.Add(card);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
                 return card;
             }
             return null;
         }
 
-        public Card? UpdateCard(long listId, long cardId, Card card)
+        public async Task<Card?> UpdateCard(long listId, long cardId, Card card)
         {
-            var cardList = GetCardListById(listId);
+            var cardList = await GetCardListById(listId);
             if (cardList != null)
             {
                 var cardToUpdate = cardList.Cards.FirstOrDefault(card => card.Id == cardId);
                 if (cardToUpdate != null)
                 {
                     cardToUpdate.ShallowCopy(card);
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
                     return cardToUpdate;
                 }
             }
             return null;
         }
 
-        public void DeleteCard(Card card)
+        public async void DeleteCard(Card card)
         {
             context.Remove<Card>(card);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

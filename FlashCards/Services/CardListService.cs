@@ -16,48 +16,48 @@ public class CardListService : ICardListService
         _rpcPublisher = rpcPublisher;
     }
 
-    public void RemoveCard(Card card)
+    public async void RemoveCard(Card card)
     {
-        _repository.DeleteCard(card);
+        await Task.Run(() => _repository.DeleteCard(card));
     }
 
-    public void RemoveCardList(CardList list)
+    public async void RemoveCardList(CardList list)
     {
-        _repository.DeleteCardList(list);
+        await Task.Run(() => _repository.DeleteCardList(list));
     }
 
-    public CardList? GetCardListById(long id)
+    public async Task<CardList?> GetCardListById(long id)
     {
-        return _repository.GetCardListById(id);
+        return await _repository.GetCardListById(id);
     }
 
-    public IEnumerable<CardList> GetCardLists()
+    public async Task<IEnumerable<CardList>> GetCardLists()
     {
-        return _repository.GetCardLists();
+        return await _repository.GetCardLists();
     }
 
-    public IEnumerable<Card>? GetCards(long cardListId)
+    public async Task<IEnumerable<Card>?> GetCards(long cardListId)
     {
-        return _repository.GetCards(cardListId);
+        return await _repository.GetCards(cardListId);
     }
 
-    public Card? CreateCard(long listId, Card card)
+    public async Task<Card?> CreateCard(long listId, Card card)
     {
-        return _repository.InsertCard(listId, card);
+        return await _repository.InsertCard(listId, card);
     }
 
-    public CardList CreateCardList(CardList list)
+    public async Task<CardList?> CreateCardList(CardList list)
     {
-        return _repository.InsertCardList(list);
+        return await _repository.InsertCardList(list);
     }
 
-    public Card? UpdateCard(long listId, long cardId, Card card)
+    public async Task<Card?> UpdateCard(long listId, long cardId, Card card)
     {
-        return _repository.UpdateCard(listId, cardId, card);
+        return await _repository.UpdateCard(listId, cardId, card);
     }
 
-    public CardList? UpdateCardList(long id, CardList list)
+    public async Task<CardList?> UpdateCardList(long id, CardList list)
     {
-        return _repository.UpdateCardList(id, list);
+        return await _repository.UpdateCardList(id, list);
     }
 }

@@ -1,6 +1,7 @@
 using FlashCards.Models;
 using FlashCards.Models.Repositories;
 using FlashCards.RpcClients;
+using FlashCards.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlashCards.Controllers
@@ -10,51 +11,50 @@ namespace FlashCards.Controllers
     public class CardsController : Controller
     {
 
-        private ICardListRepository _repository;
+        private ICardListService _service;
 
-        public CardsController(ICardListRepository repo)
+        public CardsController(ICardListService service)
         {
-            _repository = repo;
+            _service = service;
         }
 
         [HttpGet]
-        public IActionResult GetAllCards(long listId)
+        public async Task<IActionResult> GetAllCards(long listId)
         {
-            var cards = _repository.GetCards(listId);
+            var cards = await _service.GetCards(listId);
             return cards != null ? Ok(cards) : NotFound(cards);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetCardById(long listId, long id)
+        public async Task<IActionResult> GetCardById(long listId, long id)
         {
-            var card = _repository
-                .GetCards(listId)?
+            var card = (await _service.GetCards(listId))?
                 .FirstOrDefault(card => card.Id == id);
             return card != null ? Ok(card) : NotFound();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCard(long listId, long id, Card card)
+        public async Task<IActionResult> UpdateCard(long listId, long id, Card card)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var updatedCard = _repository.UpdateCard(listId, id, card);
+            var updatedCard = await _service.UpdateCard(listId, id, card);
             return updatedCard != null
                 ? Ok(updatedCard)
                 : NotFound();
         }
 
         [HttpPost]
-        public IActionResult AddCard(long listId, Card card)
+        public async Task<IActionResult> AddCard(long listId, Card card)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            var createdCard = _repository.InsertCard(listId, card);
+            var createdCard = await _service.CreateCard(listId, card);
             return createdCard != null
                 ? CreatedAtAction(nameof(GetCardById),
                     new { listId = listId, id = createdCard.Id },
@@ -63,14 +63,13 @@ namespace FlashCards.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult RemoveCard(long listId, long id)
+        public async Task<IActionResult> RemoveCard(long listId, long id)
         {
-            var cardToDelete = _repository
-                .GetCards(listId)?
+            var cardToDelete = (await _service.GetCards(listId))?
                 .FirstOrDefault(card => card.Id == id);
             if (cardToDelete != null)
             {
-                _repository.DeleteCard(cardToDelete);
+                _service.RemoveCard(cardToDelete);
                 return Ok();
             }
             return NotFound();
