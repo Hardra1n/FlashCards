@@ -1,8 +1,8 @@
-using Common;
 using FlashCards;
 using FlashCards.Data;
 using FlashCards.Models.Repositories;
 using FlashCards.RpcClients;
+using FlashCards.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +26,8 @@ builder.Services.AddDbContext<FlashCardsDbContext>(opts =>
 });
 
 builder.Services.AddScoped<ICardListRepository, EFCardListRepository>();
+builder.Services.AddScoped<SpacedRepRpcPublisher>();
+builder.Services.AddHostedService<RpcConsumerService>();
 
 var app = builder.Build();
 

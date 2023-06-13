@@ -6,8 +6,5 @@ namespace FlashCards.RpcClients;
 public class RpcConsumer : BaseRpcConsumerClient
 {
     public RpcConsumer(IConfiguration configuration)
-        : base(configuration.GetSection("FlashCards").Get<RpcClientConfiguration>()!)
-    {
-
-    }
+        : base(configuration.GetSection("FlashCards").Get<RpcClientConfiguration>()!) { }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SpacedRep.Data;
 using SpacedRep.Models;
 using SpacedRep.RpcClients;
+using SpacedRep.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddDbContext<SpacedRepDbContext>((opts) =>
 });
 
 builder.Services.AddScoped<IRepetitionRepository, EFRepetitionRepository>();
+builder.Services.AddScoped<FlashCardsRpcPublisher>();
+builder.Services.AddHostedService<RpcConsumerService>();
 
 builder.Services.AddControllers();
 
