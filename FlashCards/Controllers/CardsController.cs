@@ -1,5 +1,6 @@
 using FlashCards.Models;
 using FlashCards.Models.Repositories;
+using FlashCards.RpcClients;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlashCards.Controllers
@@ -9,24 +10,24 @@ namespace FlashCards.Controllers
     public class CardsController : Controller
     {
 
-        private ICardListRepository repository;
+        private ICardListRepository _repository;
 
         public CardsController(ICardListRepository repo)
         {
-            repository = repo;
+            _repository = repo;
         }
 
         [HttpGet]
         public IActionResult GetAllCards(long listId)
         {
-            var cards = repository.GetCards(listId);
+            var cards = _repository.GetCards(listId);
             return cards != null ? Ok(cards) : NotFound(cards);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetCardById(long listId, long id)
         {
-            var card = repository
+            var card = _repository
                 .GetCards(listId)?
                 .FirstOrDefault(card => card.Id == id);
             return card != null ? Ok(card) : NotFound();
@@ -40,7 +41,7 @@ namespace FlashCards.Controllers
                 return BadRequest();
             }
 
-            var updatedCard = repository.UpdateCard(listId, id, card);
+            var updatedCard = _repository.UpdateCard(listId, id, card);
             return updatedCard != null
                 ? Ok(updatedCard)
                 : NotFound();
@@ -53,7 +54,7 @@ namespace FlashCards.Controllers
             {
                 return BadRequest();
             }
-            var createdCard = repository.InsertCard(listId, card);
+            var createdCard = _repository.InsertCard(listId, card);
             return createdCard != null
                 ? CreatedAtAction(nameof(GetCardById),
                     new { listId = listId, id = createdCard.Id },
@@ -64,12 +65,12 @@ namespace FlashCards.Controllers
         [HttpDelete("{id}")]
         public IActionResult RemoveCard(long listId, long id)
         {
-            var cardToDelete = repository
+            var cardToDelete = _repository
                 .GetCards(listId)?
                 .FirstOrDefault(card => card.Id == id);
             if (cardToDelete != null)
             {
-                repository.DeleteCard(cardToDelete);
+                _repository.DeleteCard(cardToDelete);
                 return Ok();
             }
             return NotFound();

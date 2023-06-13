@@ -26,6 +26,7 @@ builder.Services.AddDbContext<FlashCardsDbContext>(opts =>
 });
 
 builder.Services.AddScoped<ICardListRepository, EFCardListRepository>();
+builder.Services.AddScoped<ICardListService, CardListService>();
 builder.Services.AddScoped<SpacedRepRpcPublisher>();
 builder.Services.AddHostedService<RpcConsumerService>();
 

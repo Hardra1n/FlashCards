@@ -1,5 +1,6 @@
 using FlashCards.Models;
 using FlashCards.Models.Repositories;
+using FlashCards.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlashCards.Controllers
@@ -8,23 +9,23 @@ namespace FlashCards.Controllers
     [ApiController]
     public class CardListController : Controller
     {
-        private ICardListRepository repository;
+        private ICardListService _service;
 
-        public CardListController(ICardListRepository repo)
+        public CardListController(ICardListService service)
         {
-            this.repository = repo;
+            _service = service;
         }
 
         [HttpGet]
         public IActionResult GetAllLists()
         {
-            return Ok(repository.GetCardLists());
+            return Ok(_service.GetCardLists());
         }
 
         [HttpGet("{id}")]
         public IActionResult GetListById(long id)
         {
-            var listToShow = repository.GetCardListById(id);
+            var listToShow = _service.GetCardListById(id);
             return listToShow != default(CardList)
                 ? Ok(listToShow)
                 : NotFound();
@@ -38,7 +39,7 @@ namespace FlashCards.Controllers
                 return BadRequest();
             }
 
-            var createdList = repository.InsertCardList(list);
+            var createdList = _service.CreateCardList(list);
             return CreatedAtAction(nameof(GetListById),
                 new { id = createdList.Id },
                 createdList);
@@ -51,7 +52,7 @@ namespace FlashCards.Controllers
             {
                 return BadRequest();
             }
-            var updatedList = repository.UpdateCardList(id, list);
+            var updatedList = _service.UpdateCardList(id, list);
 
             return updatedList != default(CardList)
                 ? Ok(updatedList)
@@ -61,10 +62,10 @@ namespace FlashCards.Controllers
         [HttpDelete("{id}")]
         public IActionResult RemoveList(long id)
         {
-            var listToRemove = repository.GetCardListById(id);
+            var listToRemove = _service.GetCardListById(id);
             if (listToRemove != default(CardList))
             {
-                repository.DeleteCardList(listToRemove);
+                _service.RemoveCardList(listToRemove);
                 return Ok();
             }
             return NotFound();

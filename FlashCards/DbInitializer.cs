@@ -1,5 +1,6 @@
 using FlashCards.Data;
 using FlashCards.Models;
+using FlashCards.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlashCards
@@ -15,10 +16,26 @@ namespace FlashCards
                 context.Database.Migrate();
             }
 
+            ICardListService service = app.ApplicationServices.CreateScope()
+                .ServiceProvider.GetRequiredService<ICardListService>();
             if (context.CardLists.Count() == 0)
             {
-                List<CardList> list = new List<CardList>();
-                list.AddRange(new[]{
+                foreach (var cardlist in GetDefaultCardLists())
+                {
+                    service.CreateCardList(cardlist);
+                    foreach (var card in cardlist.Cards)
+                    {
+                        service.CreateCard(cardlist.Id, card);
+                    }
+                }
+            }
+        }
+
+        private static List<CardList> GetDefaultCardLists()
+        {
+
+            List<CardList> list = new List<CardList>();
+            list.AddRange(new[]{
                     new CardList
                     {
                         Name = "First deck name",
@@ -35,30 +52,27 @@ namespace FlashCards
                     }
                 });
 
-                list[0].Cards.Add(new Card()
-                {
-                    FrontSide = "First deck first front",
-                    BackSide = "First deck first back"
-                });
-                list[0].Cards.Add(new Card()
-                {
-                    FrontSide = "First deck second front",
-                    BackSide = "First deck second back"
-                });
-                list[1].Cards.Add(new Card()
-                {
-                    FrontSide = "Second deck first front",
-                    BackSide = "Second deck first back"
-                });
-                list[1].Cards.Add(new Card()
-                {
-                    FrontSide = "Second deck second front",
-                    BackSide = "Second deck second back"
-                });
-
-                context.AddRange(list);
-                context.SaveChanges();
-            }
+            list[0].Cards.Add(new Card()
+            {
+                FrontSide = "First deck first front",
+                BackSide = "First deck first back"
+            });
+            list[0].Cards.Add(new Card()
+            {
+                FrontSide = "First deck second front",
+                BackSide = "First deck second back"
+            });
+            list[1].Cards.Add(new Card()
+            {
+                FrontSide = "Second deck first front",
+                BackSide = "Second deck first back"
+            });
+            list[1].Cards.Add(new Card()
+            {
+                FrontSide = "Second deck second front",
+                BackSide = "Second deck second back"
+            });
+            return list;
         }
     }
 }
