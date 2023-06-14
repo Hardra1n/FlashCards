@@ -14,7 +14,7 @@ public abstract class BaseRpcConsumerClient : BaseRpcClient
         PopulateHandlerDictianary();
 
         var consumer = new EventingBasicConsumer(Channel);
-        consumer.Received += ConsumeFromMethodHeader;
+        consumer.Received += Consume;
 
         Channel.BasicConsume(
             queue: QueueName,
@@ -31,15 +31,24 @@ public abstract class BaseRpcConsumerClient : BaseRpcClient
         }
     }
 
-    private void ConsumeFromMethodHeader(object? sender, BasicDeliverEventArgs ea)
+    private void Consume(object? sender, BasicDeliverEventArgs ea)
     {
-        if (ea.BasicProperties.Headers.TryGetValue(COMMON_HEADER_NAME, out var value))
+        // Handle request if COMMON_HEADER_KEY exist in properties
+        if (ea.BasicProperties.Headers.TryGetValue(COMMON_HEADER_KEY, out var value))
         {
             string? methodName = Encoding.ASCII.GetString((Byte[])value);
-            if (methodName != null && HandlerDictionary.TryGetValue(methodName, out var action))
-                action.Invoke(ea);
+            ConsumeFromCommonHeaderKey(ea, methodName);
+            return;
         }
     }
+
+
+    private void ConsumeFromCommonHeaderKey(BasicDeliverEventArgs ea, string? value)
+    {
+        if (value != null && HandlerDictionary.TryGetValue(value, out var action))
+            action.Invoke(ea);
+    }
+
 
     protected void SendResponse(BasicDeliverEventArgs ea, Byte[] body)
     {

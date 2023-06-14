@@ -6,6 +6,8 @@ namespace Common.RpcClient;
 
 public abstract class BaseRpcPublisherClient : BaseRpcClient
 {
+    private const int MESSAGE_EXPIRATION_MILLISEC = 8000;
+    private const int MESSAGE_WAITING_MILLISEC = 10000;
     private readonly string _consumerQueueName;
 
     protected ConcurrentDictionary<string, TaskCompletionSource<Byte[]>> taskCollection
@@ -27,25 +29,43 @@ public abstract class BaseRpcPublisherClient : BaseRpcClient
         if (props.Headers == null)
             props.Headers = new Dictionary<string, object>();
 
-        props.Headers.Add(COMMON_HEADER_NAME, remoteMethodName);
+        props.Headers.Add(COMMON_HEADER_KEY, remoteMethodName);
         Channel.BasicPublish(string.Empty, QueueName, false, props, body);
     }
 
-    public Task<Byte[]> SendRepliableMessage(Byte[] body, string remoteMethodName)
+    public Task<Byte[]> SendRepliableMessage(Byte[] body, string remoteMethodName, CancellationToken cancellationToken = default)
     {
-        TaskCompletionSource<Byte[]> taskSource = new TaskCompletionSource<Byte[]>();
+        if (cancellationToken == default)
+            cancellationToken = new TimeoutToken(MESSAGE_WAITING_MILLISEC).Token;
+        TaskCompletionSource<Byte[]> taskSource
+            = new TaskCompletionSource<Byte[]>();
+
+        string correlationId = Guid.NewGuid().ToString();
         var props = Channel.CreateBasicProperties();
-        string messageId = Guid.NewGuid().ToString();
-        props.CorrelationId = messageId;
+        props.Expiration = MESSAGE_EXPIRATION_MILLISEC.ToString();
+        props.CorrelationId = correlationId;
         props.ReplyTo = _consumerQueueName;
+
         SendMessage(body, remoteMethodName, props);
-        taskCollection.TryAdd(messageId, taskSource);
+        taskCollection.TryAdd(correlationId, taskSource);
+
+        cancellationToken.Register(()
+            => ChangeStateOnTokenCancellation(correlationId));
+
         return taskSource.Task;
+    }
+
+    private void ChangeStateOnTokenCancellation(string correlationId)
+    {
+        if (taskCollection.TryRemove(correlationId, out var value))
+        {
+            value.SetCanceled();
+        }
     }
 
     private void ConsumeHandler(object? sender, BasicDeliverEventArgs ea)
     {
-        if (taskCollection.TryGetValue(ea.BasicProperties.CorrelationId, out var value))
+        if (taskCollection.TryRemove(ea.BasicProperties.CorrelationId, out var value))
         {
             value.SetResult(ea.Body.ToArray());
         }
@@ -54,7 +74,14 @@ public abstract class BaseRpcPublisherClient : BaseRpcClient
     public async Task<bool> Ping()
     {
         var body = Encoder.GetBytes(Guid.NewGuid().ToString());
-        var response = await SendRepliableMessage(body, "ping");
-        return Encoder.GetString(body) == Encoder.GetString(response);
+        try
+        {
+            var response = await SendRepliableMessage(body, "ping");
+            return Encoder.GetString(body) == Encoder.GetString(response);
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

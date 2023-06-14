@@ -5,7 +5,7 @@ namespace Common.RpcClient;
 
 public abstract class BaseRpcClient : IDisposable
 {
-    protected const string COMMON_HEADER_NAME = "method";
+    protected const string COMMON_HEADER_KEY = "method";
 
     protected IConnection Connection;
 
@@ -21,6 +21,10 @@ public abstract class BaseRpcClient : IDisposable
         var factory = new ConnectionFactory() { HostName = configuration.HostName };
         Connection = factory.CreateConnection();
         Channel = Connection.CreateModel();
+        Channel.BasicQos(
+            prefetchSize: 0,
+            prefetchCount: 1,
+            global: false);
 
         Channel.QueueDeclare(
             queue: QueueName,
