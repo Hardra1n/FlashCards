@@ -16,48 +16,67 @@ public class CardListService : ICardListService
         _rpcPublisher = rpcPublisher;
     }
 
-    public async void RemoveCard(Card card)
+    public async Task RemoveCard(Card card)
     {
-        await Task.Run(() => _repository.DeleteCard(card));
+        await _repository.DeleteCard(card);
+        _repository.SaveChanges();
     }
 
-    public async void RemoveCardList(CardList list)
+    public async Task RemoveCardList(CardList list)
     {
-        await Task.Run(() => _repository.DeleteCardList(list));
+        await _repository.DeleteCardList(list);
+        _repository.SaveChanges();
     }
 
     public async Task<CardList?> GetCardListById(long id)
     {
-        return await _repository.GetCardListById(id);
+        var cardList = await _repository.GetCardListById(id);
+        return cardList;
     }
 
     public async Task<IEnumerable<CardList>> GetCardLists()
     {
-        return await _repository.GetCardLists();
+        var cardLists = await _repository.GetCardLists();
+        return cardLists;
     }
 
     public async Task<IEnumerable<Card>?> GetCards(long cardListId)
     {
-        return await _repository.GetCards(cardListId);
+        var cards = await _repository.GetCards(cardListId);
+        return cards;
     }
 
     public async Task<Card?> CreateCard(long listId, Card card)
     {
-        return await _repository.InsertCard(listId, card);
+        var cardWithId = await _repository.InsertCard(listId, card);
+        _repository.SaveChanges();
+        return cardWithId;
     }
 
     public async Task<CardList?> CreateCardList(CardList list)
     {
-        return await _repository.InsertCardList(list);
+        var cardList = await _repository.InsertCardList(list);
+        _repository.SaveChanges();
+        return cardList;
     }
 
     public async Task<Card?> UpdateCard(long listId, long cardId, Card card)
     {
-        return await _repository.UpdateCard(listId, cardId, card);
+        var updatedCard = await _repository.UpdateCard(listId, cardId, card);
+        _repository.SaveChanges();
+        return updatedCard;
     }
 
     public async Task<CardList?> UpdateCardList(long id, CardList list)
     {
-        return await _repository.UpdateCardList(id, list);
+        var updatedCardList = await _repository.UpdateCardList(id, list);
+        _repository.SaveChanges();
+        return updatedCardList;
+    }
+
+    public async Task<Card?> GetCardById(long cardListId, long cardId)
+    {
+        var cards = await _repository.GetCards(cardListId);
+        return cards?.FirstOrDefault(card => card.Id == cardId);
     }
 }

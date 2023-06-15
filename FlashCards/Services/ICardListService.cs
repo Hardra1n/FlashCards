@@ -12,13 +12,15 @@ public interface ICardListService
 
     Task<CardList?> UpdateCardList(long id, CardList list);
 
-    void RemoveCardList(CardList list);
+    Task RemoveCardList(CardList list);
 
-    public Task<IEnumerable<Card>?> GetCards(long cardListId);
+    Task<IEnumerable<Card>?> GetCards(long cardListId);
 
-    public Task<Card?> CreateCard(long listId, Card card);
+    Task<Card?> GetCardById(long cardListId, long cardId);
 
-    public Task<Card?> UpdateCard(long listId, long cardId, Card card);
+    Task<Card?> CreateCard(long listId, Card card);
 
-    public void RemoveCard(Card card);
+    Task<Card?> UpdateCard(long listId, long cardId, Card card);
+
+    Task RemoveCard(Card card);
 }

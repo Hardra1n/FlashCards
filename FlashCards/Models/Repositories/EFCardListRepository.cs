@@ -26,14 +26,12 @@ namespace FlashCards.Models.Repositories
         public async Task<CardList?> InsertCardList(CardList list)
         {
             var entity = await context.AddAsync(list);
-            await context.SaveChangesAsync();
             return entity.Entity;
         }
 
-        public async void DeleteCardList(CardList list)
+        public async Task DeleteCardList(CardList list)
         {
-            context.Remove(list);
-            await context.SaveChangesAsync();
+            await Task.Run(() => context.Remove(list));
         }
 
         public async Task<CardList?> UpdateCardList(long id, CardList list)
@@ -42,7 +40,6 @@ namespace FlashCards.Models.Repositories
             if (listToUpdate != null)
             {
                 listToUpdate.ShallowCopy(list);
-                await context.SaveChangesAsync();
             }
             return listToUpdate;
         }
@@ -57,7 +54,6 @@ namespace FlashCards.Models.Repositories
             if (cardList != null)
             {
                 cardList.Cards.Add(card);
-                await context.SaveChangesAsync();
                 return card;
             }
             return null;
@@ -72,17 +68,25 @@ namespace FlashCards.Models.Repositories
                 if (cardToUpdate != null)
                 {
                     cardToUpdate.ShallowCopy(card);
-                    await context.SaveChangesAsync();
                     return cardToUpdate;
                 }
             }
             return null;
         }
 
-        public async void DeleteCard(Card card)
+        public async Task DeleteCard(Card card)
         {
-            context.Remove<Card>(card);
-            await context.SaveChangesAsync();
+            await Task.Run(() => context.Remove<Card>(card));
+        }
+
+        public void SaveChanges()
+        {
+            context.SaveChanges();
+        }
+
+        public void ClearChanges()
+        {
+            context.ChangeTracker.Clear();
         }
     }
 }

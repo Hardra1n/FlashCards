@@ -18,6 +18,7 @@ builder.Services.AddDbContext<SpacedRepDbContext>((opts) =>
 });
 
 builder.Services.AddScoped<IRepetitionRepository, EFRepetitionRepository>();
+builder.Services.AddScoped<IRepetitionService, RepetitionService>();
 builder.Services.AddScoped<FlashCardsRpcPublisher>();
 builder.Services.AddHostedService<RpcConsumerService>();
 

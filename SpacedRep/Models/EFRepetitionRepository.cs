@@ -14,7 +14,6 @@ namespace SpacedRep.Models
         public async Task<Repetition> CreateAsync()
         {
             var result = await _context.AddAsync(new Repetition());
-            _context.SaveChanges();
             return result.Entity;
 
         }
@@ -25,18 +24,13 @@ namespace SpacedRep.Models
             if (repToDelete != null)
             {
                 _context.Remove(repToDelete);
-                _context.SaveChanges();
             }
             return repToDelete != null;
         }
 
-        public IEnumerable<Repetition> Read()
-        {
-            return _context.Repetitions.AsEnumerable();
-        }
-
         public async Task<Repetition?> ReadAsync(long id)
             => await _context.FindAsync<Repetition>(id);
+
 
         public async Task<Repetition?> UpdateAsync(Repetition rep)
         {
@@ -44,9 +38,23 @@ namespace SpacedRep.Models
             if (repToUpdate != null)
             {
                 repToUpdate.Copy(rep);
-                _context.SaveChanges();
             }
             return repToUpdate;
+        }
+
+        public async Task SaveChanges()
+        {
+            await Task.Run(() => _context.SaveChanges());
+        }
+
+        public async Task ClearChanges()
+        {
+            await Task.Run(() => _context.ChangeTracker.Clear());
+        }
+
+        public async Task<IEnumerable<Repetition>> Read()
+        {
+            return await Task.Run(() => _context.Repetitions.AsEnumerable());
         }
     }
 }

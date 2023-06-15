@@ -67,7 +67,7 @@ namespace FlashCards.Controllers
             var listToRemove = await _service.GetCardListById(id);
             if (listToRemove != default(CardList))
             {
-                _service.RemoveCardList(listToRemove);
+                await _service.RemoveCardList(listToRemove);
                 return Ok();
             }
             return NotFound();

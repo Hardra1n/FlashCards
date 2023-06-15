@@ -28,8 +28,7 @@ namespace FlashCards.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCardById(long listId, long id)
         {
-            var card = (await _service.GetCards(listId))?
-                .FirstOrDefault(card => card.Id == id);
+            var card = await _service.GetCardById(listId, id);
             return card != null ? Ok(card) : NotFound();
         }
 
@@ -65,11 +64,10 @@ namespace FlashCards.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveCard(long listId, long id)
         {
-            var cardToDelete = (await _service.GetCards(listId))?
-                .FirstOrDefault(card => card.Id == id);
+            var cardToDelete = await _service.GetCardById(listId, id);
             if (cardToDelete != null)
             {
-                _service.RemoveCard(cardToDelete);
+                await _service.RemoveCard(cardToDelete);
                 return Ok();
             }
             return NotFound();
