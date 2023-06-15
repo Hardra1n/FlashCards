@@ -10,8 +10,8 @@ public abstract class BaseRpcPublisherClient : BaseRpcClient
     private const int MESSAGE_WAITING_MILLISEC = 10000;
     private readonly string _consumerQueueName;
 
-    protected ConcurrentDictionary<string, TaskCompletionSource<Byte[]>> taskCollection
-        = new ConcurrentDictionary<string, TaskCompletionSource<Byte[]>>();
+    protected ConcurrentDictionary<string, TaskCompletionSource<RpcClientResponse<Byte[]>>> taskCollection
+        = new();
 
     public BaseRpcPublisherClient(RpcClientConfiguration configuration) : base(configuration)
     {
@@ -33,12 +33,15 @@ public abstract class BaseRpcPublisherClient : BaseRpcClient
         Channel.BasicPublish(string.Empty, QueueName, false, props, body);
     }
 
-    public Task<Byte[]> SendRepliableMessage(Byte[] body, string remoteMethodName, CancellationToken cancellationToken = default)
+    public Task<RpcClientResponse<Byte[]>> SendRepliableMessage(
+        Byte[] body,
+        string remoteMethodName,
+        CancellationToken cancellationToken = default)
     {
         if (cancellationToken == default)
             cancellationToken = new TimeoutToken(MESSAGE_WAITING_MILLISEC).Token;
-        TaskCompletionSource<Byte[]> taskSource
-            = new TaskCompletionSource<Byte[]>();
+        TaskCompletionSource<RpcClientResponse<Byte[]>> taskSource
+            = new TaskCompletionSource<RpcClientResponse<Byte[]>>();
 
         string correlationId = Guid.NewGuid().ToString();
         var props = Channel.CreateBasicProperties();
@@ -67,7 +70,8 @@ public abstract class BaseRpcPublisherClient : BaseRpcClient
     {
         if (taskCollection.TryRemove(ea.BasicProperties.CorrelationId, out var value))
         {
-            value.SetResult(ea.Body.ToArray());
+            var response = ea.ToRpcClientResponse();
+            value.SetResult(response);
         }
     }
 
@@ -77,7 +81,7 @@ public abstract class BaseRpcPublisherClient : BaseRpcClient
         try
         {
             var response = await SendRepliableMessage(body, "ping");
-            return Encoder.GetString(body) == Encoder.GetString(response);
+            return Encoder.GetString(body) == Encoder.GetString(response.Data);
         }
         catch
         {

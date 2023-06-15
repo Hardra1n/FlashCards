@@ -50,9 +50,15 @@ public abstract class BaseRpcConsumerClient : BaseRpcClient
     }
 
 
-    protected void SendResponse(BasicDeliverEventArgs ea, Byte[] body)
+    protected void SendResponse(BasicDeliverEventArgs ea, Byte[] body, bool isSuccess = true, IBasicProperties? props = default)
     {
-        var props = Channel.CreateBasicProperties();
+        if (props == default)
+            props = Channel.CreateBasicProperties();
+        if (props.Headers == default)
+            props.Headers = new Dictionary<string, object>();
+
+        string statusValue = isSuccess ? "success" : "fail";
+        props.Headers.Add("status", statusValue);
         props.CorrelationId = ea.BasicProperties.CorrelationId;
         Channel.BasicPublish(string.Empty, ea.BasicProperties.ReplyTo, false, props, body);
     }
