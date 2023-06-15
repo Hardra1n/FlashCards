@@ -15,4 +15,19 @@ public static class RpcClientResponseExtensions
         }
         return rpcClientResponse;
     }
+
+    public static RpcClientResponse<T> CastBodyTo<T>(this Encoding encoder, RpcClientResponse<Byte[]> responseToCast) where T : IParsable<T>
+    {
+        string body = encoder.GetString(responseToCast.Data);
+        T parsedBody = T.Parse(body, null);
+        var response = responseToCast.Copy<T>(parsedBody);
+        return response;
+    }
+
+    public static RpcClientResponse<string> CastBodyToString(this Encoding encoder, RpcClientResponse<Byte[]> responseToCast)
+    {
+        string body = encoder.GetString(responseToCast.Data);
+        var response = responseToCast.Copy<string>(body);
+        return response;
+    }
 }

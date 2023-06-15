@@ -12,4 +12,11 @@ public class RpcClientResponse<T>
     {
         Data = data;
     }
+
+    public RpcClientResponse<Y> Copy<Y>(Y data)
+    {
+        RpcClientResponse<Y> response = new(data);
+        response.IsSuccess = this.IsSuccess;
+        return response;
+    }
 }
