@@ -11,7 +11,7 @@ namespace FlashCards.Models.Repositories
 
         Task<CardList?> UpdateCardList(long id, CardList list);
 
-        Task DeleteCardList(CardList list);
+        Task<bool> DeleteCardList(long listId);
 
         public Task<IQueryable<Card>?> GetCards(long cardListId);
 
@@ -19,7 +19,7 @@ namespace FlashCards.Models.Repositories
 
         public Task<Card?> UpdateCard(long listId, long cardId, Card card);
 
-        public Task DeleteCard(Card card);
+        public Task<bool> DeleteCard(long listId, long cardId);
 
         public void SaveChanges();
 

@@ -16,16 +16,18 @@ public class CardListService : ICardListService
         _rpcPublisher = rpcPublisher;
     }
 
-    public async Task RemoveCard(Card card)
+    public async Task<bool> RemoveCard(long listId, long cardId)
     {
-        await _repository.DeleteCard(card);
+        var result = await _repository.DeleteCard(listId, cardId);
         _repository.SaveChanges();
+        return result;
     }
 
-    public async Task RemoveCardList(CardList list)
+    public async Task<bool> RemoveCardList(long listId)
     {
-        await _repository.DeleteCardList(list);
+        var result = await _repository.DeleteCardList(listId);
         _repository.SaveChanges();
+        return result;
     }
 
     public async Task<CardList?> GetCardListById(long id)

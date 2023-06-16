@@ -17,19 +17,19 @@ namespace SpacedRep.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllAsync() => Ok(await _service.Read());
+        public async Task<ActionResult> GetAllAsync() => Ok(await _service.GetAllRepetitions());
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(long id)
         {
-            var result = await _service.ReadAsync(id);
+            var result = await _service.GetRepetitionById(id);
             return result != null ? Ok(result.ToReadDto()) : NotFound();
         }
 
         [HttpPost]
         public async Task<ActionResult> Create()
         {
-            var result = await _service.CreateAsync();
+            var result = await _service.CreateRepetition();
             return result != null
                 ? CreatedAtAction(nameof(GetById), new { id = result.Id }, result)
                 : BadRequest();
@@ -38,12 +38,12 @@ namespace SpacedRep.Controllers
         [HttpPut]
         public async Task<ActionResult> Update(RepetitionUpdateDto dto)
         {
-            var result = await _service.UpdateAsync(dto.ToRepetition());
+            var result = await _service.UpdateRepetition(dto.ToRepetition());
             return result != null ? Ok(result) : NotFound();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(long id)
-            => await _service.DeleteAsync(id) ? Ok() : NotFound();
+            => await _service.RemoveRepetition(id) ? Ok() : NotFound();
     }
 }

@@ -4,9 +4,9 @@ namespace SpacedRep.Services;
 
 public interface IRepetitionService
 {
-    Task<Repetition> CreateAsync();
-    Task<IEnumerable<Repetition>> Read();
-    Task<Repetition?> ReadAsync(long id);
-    Task<Repetition?> UpdateAsync(Repetition rep);
-    Task<bool> DeleteAsync(long id);
+    Task<Repetition> CreateRepetition();
+    Task<IEnumerable<Repetition>> GetAllRepetitions();
+    Task<Repetition?> GetRepetitionById(long id);
+    Task<Repetition?> UpdateRepetition(Repetition rep);
+    Task<bool> RemoveRepetition(long id);
 }

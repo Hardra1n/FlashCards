@@ -12,7 +12,7 @@ public interface ICardListService
 
     Task<CardList?> UpdateCardList(long id, CardList list);
 
-    Task RemoveCardList(CardList list);
+    Task<bool> RemoveCardList(long listId);
 
     Task<IEnumerable<Card>?> GetCards(long cardListId);
 
@@ -22,5 +22,5 @@ public interface ICardListService
 
     Task<Card?> UpdateCard(long listId, long cardId, Card card);
 
-    Task RemoveCard(Card card);
+    Task<bool> RemoveCard(long listId, long cardId);
 }

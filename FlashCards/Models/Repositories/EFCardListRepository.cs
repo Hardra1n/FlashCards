@@ -12,12 +12,12 @@ namespace FlashCards.Models.Repositories
             context = ctx;
         }
 
-        public async Task<IEnumerable<CardList>> GetCardLists()
-            => await Task.Run(() => context.CardLists);
+        public Task<IEnumerable<CardList>> GetCardLists()
+            => Task.Run(() => context.CardLists.AsEnumerable());
 
-        public async Task<CardList?> GetCardListById(long id)
+        public Task<CardList?> GetCardListById(long id)
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
                 context.CardLists
                     .Include(cardList => cardList.Cards)
                     .FirstOrDefault(cardList => cardList.Id == id));
@@ -29,9 +29,15 @@ namespace FlashCards.Models.Repositories
             return entity.Entity;
         }
 
-        public async Task DeleteCardList(CardList list)
+        public async Task<bool> DeleteCardList(long listId)
         {
-            await Task.Run(() => context.Remove(list));
+            var cardList = await GetCardListById(listId);
+            if (cardList != null)
+            {
+                context.Remove(cardList);
+                return true;
+            }
+            return false;
         }
 
         public async Task<CardList?> UpdateCardList(long id, CardList list)
@@ -74,9 +80,19 @@ namespace FlashCards.Models.Repositories
             return null;
         }
 
-        public async Task DeleteCard(Card card)
+        public async Task<bool> DeleteCard(long listId, long cardId)
         {
-            await Task.Run(() => context.Remove<Card>(card));
+            var cardList = await GetCardListById(listId);
+            if (cardList != null)
+            {
+                var cardToDelete = cardList.Cards.FirstOrDefault(card => card.Id == cardId);
+                if (cardToDelete != null)
+                {
+                    context.Remove<Card>(cardToDelete);
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void SaveChanges()

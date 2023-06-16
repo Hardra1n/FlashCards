@@ -40,8 +40,7 @@ public abstract class BaseRpcPublisherClient : BaseRpcClient
     {
         if (cancellationToken == default)
             cancellationToken = new TimeoutToken(MESSAGE_WAITING_MILLISEC).Token;
-        TaskCompletionSource<RpcClientResponse<Byte[]>> taskSource
-            = new TaskCompletionSource<RpcClientResponse<Byte[]>>();
+        TaskCompletionSource<RpcClientResponse<Byte[]>> taskSource = new();
 
         string correlationId = Guid.NewGuid().ToString();
         var props = Channel.CreateBasicProperties();

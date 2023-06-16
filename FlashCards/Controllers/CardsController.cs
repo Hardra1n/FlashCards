@@ -64,13 +64,7 @@ namespace FlashCards.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveCard(long listId, long id)
         {
-            var cardToDelete = await _service.GetCardById(listId, id);
-            if (cardToDelete != null)
-            {
-                await _service.RemoveCard(cardToDelete);
-                return Ok();
-            }
-            return NotFound();
+            return await _service.RemoveCard(listId, id) ? Ok() : NotFound();
         }
     }
 }
