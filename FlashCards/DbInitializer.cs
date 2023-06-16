@@ -7,7 +7,7 @@ namespace FlashCards
 {
     public class DbInitializer
     {
-        public static void Initialize(IApplicationBuilder app)
+        public static async Task InitializeAsync(IApplicationBuilder app)
         {
             FlashCardsDbContext context = app.ApplicationServices.CreateScope()
                 .ServiceProvider.GetRequiredService<FlashCardsDbContext>();
@@ -16,16 +16,16 @@ namespace FlashCards
                 context.Database.Migrate();
             }
 
-            ICardListService service = app.ApplicationServices.CreateScope()
-                .ServiceProvider.GetRequiredService<ICardListService>();
+            CardListApiService service = app.ApplicationServices.CreateScope()
+                .ServiceProvider.GetRequiredService<CardListApiService>();
             if (context.CardLists.Count() == 0)
             {
                 foreach (var cardlist in GetDefaultCardLists())
                 {
-                    service.CreateCardList(cardlist);
+                    await service.CreateCardList(cardlist);
                     foreach (var card in cardlist.Cards)
                     {
-                        service.CreateCard(cardlist.Id, card);
+                        await service.CreateCard(cardlist.Id, card);
                     }
                 }
             }

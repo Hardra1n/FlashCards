@@ -1,13 +1,18 @@
 using SpacedRep.Models;
+using SpacedRep.RpcClients;
 
 namespace SpacedRep.Services;
 
-public class RepetitionService : IRepetitionService
+public class RepetitionApiService
 {
     private IRepetitionRepository _repository;
-    public RepetitionService(IRepetitionRepository repository)
+
+    private FlashCardsRpcPublisher _publisher;
+
+    public RepetitionApiService(IRepetitionRepository repository, FlashCardsRpcPublisher publisher)
     {
         _repository = repository;
+        _publisher = publisher;
     }
 
     public async Task<Repetition> CreateRepetition()

@@ -4,13 +4,13 @@ using FlashCards.RpcClients;
 
 namespace FlashCards.Services;
 
-public class CardListService : ICardListService
+public class CardListApiService
 {
     private ICardListRepository _repository;
 
     private SpacedRepRpcPublisher _rpcPublisher;
 
-    public CardListService(ICardListRepository repository, SpacedRepRpcPublisher rpcPublisher)
+    public CardListApiService(ICardListRepository repository, SpacedRepRpcPublisher rpcPublisher)
     {
         _repository = repository;
         _rpcPublisher = rpcPublisher;

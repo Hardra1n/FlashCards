@@ -26,8 +26,9 @@ builder.Services.AddDbContext<FlashCardsDbContext>(opts =>
 });
 
 builder.Services.AddScoped<ICardListRepository, EFCardListRepository>();
-builder.Services.AddScoped<ICardListService, CardListService>();
+builder.Services.AddScoped<CardListApiService>();
 builder.Services.AddScoped<SpacedRepRpcPublisher>();
+builder.Services.AddScoped<CardListRpcService>();
 builder.Services.AddHostedService<RpcConsumerService>();
 
 var app = builder.Build();
@@ -37,5 +38,5 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapControllers();
-DbInitializer.Initialize(app);
+await DbInitializer.InitializeAsync(app);
 app.Run();

@@ -11,9 +11,9 @@ namespace FlashCards.Controllers
     public class CardsController : Controller
     {
 
-        private ICardListService _service;
+        private CardListApiService _service;
 
-        public CardsController(ICardListService service)
+        public CardsController(CardListApiService service)
         {
             _service = service;
         }

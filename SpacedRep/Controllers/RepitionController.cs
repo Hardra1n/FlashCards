@@ -9,9 +9,9 @@ namespace SpacedRep.Controllers
     [Route("api/[controller]")]
     public class RepititionController : ControllerBase
     {
-        private IRepetitionService _service;
+        private RepetitionApiService _service;
 
-        public RepititionController(IRepetitionService service)
+        public RepititionController(RepetitionApiService service)
         {
             _service = service;
         }
