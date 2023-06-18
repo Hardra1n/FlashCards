@@ -1,3 +1,4 @@
+using Common.RpcClient;
 using Microsoft.EntityFrameworkCore;
 using SpacedRep.Data;
 using SpacedRep.Models;
@@ -18,9 +19,11 @@ builder.Services.AddDbContext<SpacedRepDbContext>((opts) =>
 });
 
 builder.Services.AddScoped<IRepetitionRepository, EFRepetitionRepository>();
-builder.Services.AddScoped<RepetitionApiService>();
-builder.Services.AddScoped<RepetitionRpcService>();
+builder.Services.AddScoped<IRpcConsumerProvider, RpcConsumerWebProvider>();
+builder.Services.AddSingleton<RpcConsumer>();
 builder.Services.AddScoped<FlashCardsRpcPublisher>();
+builder.Services.AddScoped<RepetitionRpcService>();
+builder.Services.AddScoped<RepetitionApiService>();
 builder.Services.AddHostedService<RpcConsumerService>();
 
 builder.Services.AddControllers();

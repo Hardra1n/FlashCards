@@ -1,3 +1,4 @@
+using Common.RpcClient;
 using FlashCards;
 using FlashCards.Data;
 using FlashCards.Models.Repositories;
@@ -26,6 +27,8 @@ builder.Services.AddDbContext<FlashCardsDbContext>(opts =>
 });
 
 builder.Services.AddScoped<ICardListRepository, EFCardListRepository>();
+builder.Services.AddScoped<IRpcConsumerProvider, RpcConsumerWebProvider>();
+builder.Services.AddSingleton<RpcConsumer>();
 builder.Services.AddScoped<CardListApiService>();
 builder.Services.AddScoped<SpacedRepRpcPublisher>();
 builder.Services.AddScoped<CardListRpcService>();

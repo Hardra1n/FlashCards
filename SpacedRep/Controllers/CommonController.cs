@@ -15,7 +15,7 @@ public class CommonController : ControllerBase
     [HttpGet("ping")]
     public async Task<IActionResult> Ping()
     {
-        bool flashCardsPing = await _rpcPublisher.Ping();
+        bool flashCardsPing = await _rpcPublisher.SendPing();
         string pingResult = $"This service: {true}" + '\n' + $"Flash Cards service: {flashCardsPing}";
         return Ok(pingResult);
     }

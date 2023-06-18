@@ -8,9 +8,16 @@ public static class RpcExtensions
     public static IEnumerable<KeyValuePair<string, Action<BasicDeliverEventArgs>>> GetAttributeNamesAndMethods(object invoker)
     {
         var type = invoker.GetType();
-        var methods = type.GetMethods(BindingFlags.NonPublic
-            | BindingFlags.Instance
-            | BindingFlags.Public);
+        // var methods = type.GetMethods(BindingFlags.NonPublic
+        //     | BindingFlags.Instance
+        //     | BindingFlags.Public);
+        List<MethodInfo> methods = new List<MethodInfo>();
+        while (type != null && type != typeof(BaseRpcConsumerClient))
+        {
+            var methodsOfType = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+            methods.AddRange(methodsOfType);
+            type = type.BaseType;
+        }
         foreach (var method in methods)
         {
             var attribute = method.GetCustomAttribute<ConsumeHandlerAttribute>();

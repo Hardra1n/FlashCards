@@ -4,13 +4,15 @@ using FlashCards.Services;
 
 namespace FlashCards.RpcClients;
 
-public class RpcConsumer : BaseRpcConsumerClient
+public class RpcConsumer : RpcConsumerClient
 {
-    private CardListRpcService _service;
+    private CardListRpcService _service => _provider.GetService<CardListRpcService>()!;
 
-    public RpcConsumer(IConfiguration configuration, CardListRpcService service)
+    private IServiceProvider _provider;
+
+    public RpcConsumer(IConfiguration configuration, IServiceProvider provider)
         : base(configuration.GetSection("FlashCards").Get<RpcClientConfiguration>()!)
     {
-        _service = service;
+        _provider = provider;
     }
 }

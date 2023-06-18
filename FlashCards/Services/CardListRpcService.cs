@@ -1,15 +1,16 @@
 using FlashCards.Models.Repositories;
+using FlashCards.RpcClients;
 
 namespace FlashCards.Services;
 
 public class CardListRpcService
 {
     private ICardListRepository _repository;
-    private CardListRpcService _service;
+    private SpacedRepRpcPublisher _publisher;
 
-    public CardListRpcService(ICardListRepository repository, CardListRpcService service)
+    public CardListRpcService(ICardListRepository repository, SpacedRepRpcPublisher publisher)
     {
         _repository = repository;
-        _service = service;
+        _publisher = publisher;
     }
 }

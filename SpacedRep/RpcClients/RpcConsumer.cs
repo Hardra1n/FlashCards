@@ -1,15 +1,18 @@
 using Common.RpcClient;
+using RabbitMQ.Client.Events;
 using SpacedRep.Services;
 
 namespace SpacedRep.RpcClients;
 
-public class RpcConsumer : BaseRpcConsumerClient
+public class RpcConsumer : RpcConsumerClient
 {
-    private RepetitionRpcService _service;
 
-    public RpcConsumer(IConfiguration configuration, RepetitionRpcService service)
+    private IServiceProvider _provider;
+    public RpcConsumer(IConfiguration configuration, IServiceProvider provider)
         : base(configuration.GetSection("SpacedRep").Get<RpcClientConfiguration>()!)
     {
-        _service = service;
+        _provider = provider;
     }
+
+    private RepetitionRpcService _service => _provider.GetService<RepetitionRpcService>()!;
 }

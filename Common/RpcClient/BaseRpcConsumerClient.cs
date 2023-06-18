@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -7,14 +8,17 @@ namespace Common.RpcClient;
 public abstract class BaseRpcConsumerClient : BaseRpcClient
 {
     protected IDictionary<string, Action<BasicDeliverEventArgs>> HandlerDictionary
-        = new Dictionary<string, Action<BasicDeliverEventArgs>>();
+         = new Dictionary<string, Action<BasicDeliverEventArgs>>();
+
+    protected ConcurrentDictionary<string,
+        TaskCompletionSource<RpcClientMessage<byte[]>>> ReplyingDictionary = new();
 
     public BaseRpcConsumerClient(RpcClientConfiguration configuration) : base(configuration)
     {
         PopulateHandlerDictianary();
 
         var consumer = new EventingBasicConsumer(Channel);
-        consumer.Received += Consume;
+        consumer.Received += HandleConsume;
 
         Channel.BasicConsume(
             queue: QueueName,
@@ -31,7 +35,7 @@ public abstract class BaseRpcConsumerClient : BaseRpcClient
         }
     }
 
-    private void Consume(object? sender, BasicDeliverEventArgs ea)
+    private void HandleConsume(object? sender, BasicDeliverEventArgs ea)
     {
         // Handle request if COMMON_HEADER_KEY exist in properties
         if (ea.BasicProperties.Headers.TryGetValue(COMMON_HEADER_KEY, out var value))
@@ -49,23 +53,30 @@ public abstract class BaseRpcConsumerClient : BaseRpcClient
             action.Invoke(ea);
     }
 
-
-    protected void SendResponse(BasicDeliverEventArgs ea, Byte[] body, bool isSuccess = true, IBasicProperties? props = default)
+    public Task<RpcClientMessage<byte[]>> AddPendingReply(string correlationId)
     {
-        if (props == default)
-            props = Channel.CreateBasicProperties();
-        if (props.Headers == default)
-            props.Headers = new Dictionary<string, object>();
-
-        string statusValue = isSuccess ? "success" : "fail";
-        props.Headers.Add("status", statusValue);
-        props.CorrelationId = ea.BasicProperties.CorrelationId;
-        Channel.BasicPublish(string.Empty, ea.BasicProperties.ReplyTo, false, props, body);
+        TaskCompletionSource<RpcClientMessage<byte[]>> tcs = new();
+        ReplyingDictionary.TryAdd(correlationId, tcs);
+        return tcs.Task;
     }
 
-    [ConsumeHandler("ping")]
-    public void PingHandler(BasicDeliverEventArgs ea)
+    public bool AssignResultToPendingReply(string correlationId, RpcClientMessage<byte[]> result)
     {
-        SendResponse(ea, ea.Body.ToArray());
+        if (ReplyingDictionary.TryRemove(correlationId, out var tsc))
+        {
+            tsc.SetResult(result);
+            return true;
+        }
+        return false;
+    }
+
+    public bool CancelPendingReply(string correlationId)
+    {
+        if (ReplyingDictionary.TryRemove(correlationId, out var tcs))
+        {
+            tcs.SetCanceled();
+            return true;
+        }
+        return false;
     }
 }

@@ -15,7 +15,7 @@ public class CommonController : ControllerBase
     [HttpGet("ping")]
     public async Task<IActionResult> Ping()
     {
-        bool spacedRepPing = await _rpcPublisher.Ping();
+        bool spacedRepPing = await _rpcPublisher.SendPing();
         string pingResult = $"This service: {true}" + '\n' + $"Spaced Repetitions service: {spacedRepPing}";
         return Ok(pingResult);
     }

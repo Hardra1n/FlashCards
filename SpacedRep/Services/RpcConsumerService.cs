@@ -6,9 +6,9 @@ public class RpcConsumerService : IHostedService
 {
     private RpcConsumer _service;
 
-    public RpcConsumerService(IConfiguration configuration, RepetitionRpcService service)
+    public RpcConsumerService(RpcConsumer service)
     {
-        _service = new RpcConsumer(configuration, service);
+        _service = service;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)

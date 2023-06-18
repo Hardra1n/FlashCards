@@ -5,18 +5,21 @@ namespace Common.RpcClient;
 
 public static class RpcClientResponseExtensions
 {
-    public static RpcClientResponse<Byte[]> ToRpcClientResponse(this BasicDeliverEventArgs ea)
+    public static RpcClientMessage<Byte[]> ToRpcClientResponse(this BasicDeliverEventArgs ea)
     {
-        var rpcClientResponse = new RpcClientResponse<Byte[]>(ea.Body.ToArray());
-        if (ea.BasicProperties.Headers.TryGetValue("status", out var value)
-            && Boolean.TryParse(Encoding.ASCII.GetString((Byte[])value), out var isSuccess))
+        var rpcClientResponse = new RpcClientMessage<Byte[]>(ea.Body.ToArray())
+        {
+            CorrelationId = ea.BasicProperties.CorrelationId
+        };
+        if (ea.BasicProperties.Headers.TryGetValue("status", out var status)
+            && Boolean.TryParse(Encoding.ASCII.GetString((Byte[])status), out var isSuccess))
         {
             rpcClientResponse.IsSuccess = isSuccess;
         }
         return rpcClientResponse;
     }
 
-    public static RpcClientResponse<T> CastBodyTo<T>(this Encoding encoder, RpcClientResponse<Byte[]> responseToCast) where T : IParsable<T>
+    public static RpcClientMessage<T> CastBodyTo<T>(this Encoding encoder, RpcClientMessage<Byte[]> responseToCast) where T : IParsable<T>
     {
         string body = encoder.GetString(responseToCast.Data);
         T parsedBody = T.Parse(body, null);
@@ -24,7 +27,7 @@ public static class RpcClientResponseExtensions
         return response;
     }
 
-    public static RpcClientResponse<string> CastBodyToString(this Encoding encoder, RpcClientResponse<Byte[]> responseToCast)
+    public static RpcClientMessage<string> CastBodyToString(this Encoding encoder, RpcClientMessage<Byte[]> responseToCast)
     {
         string body = encoder.GetString(responseToCast.Data);
         var response = responseToCast.Copy<string>(body);

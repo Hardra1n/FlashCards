@@ -50,9 +50,20 @@ public class CardListApiService
 
     public async Task<Card?> CreateCard(long listId, Card card)
     {
-        var cardWithId = await _repository.InsertCard(listId, card);
-        _repository.SaveChanges();
-        return cardWithId;
+        try
+        {
+            var response = await _rpcPublisher.SendCardCreation();
+            card.SpacedRepetitionId = response.Data;
+            var insertedCard = await _repository.InsertCard(listId, card);
+            _repository.SaveChanges();
+            return insertedCard;
+        }
+        catch
+        {
+            _repository.ClearChanges();
+            // _rpcPublisher.SendApprove();
+            return null;
+        }
     }
 
     public async Task<CardList?> CreateCardList(CardList list)
