@@ -11,14 +11,14 @@ public class RpcConsumerClient : BaseRpcConsumerClient
 
     }
 
-    [ConsumeHandler(PING_HEADER_VALUE)]
+    [ConsumeHandler(ClientMethodValues.PING)]
     private void HandlePing(BasicDeliverEventArgs ea)
     {
         var props = Channel.CreateBasicProperties();
         props.CorrelationId = ea.BasicProperties.CorrelationId;
         props.Expiration = BASE_OPERATION_EXPIRATION_TIME;
         props.Headers = new Dictionary<string, object>();
-        props.Headers.Add(COMMON_HEADER_KEY, REPLY_HEADER_VALUE);
+        props.Headers.Add(COMMON_HEADER_KEY, ClientMethodValues.REPLY);
         Channel.BasicPublish(
             string.Empty,
             ea.BasicProperties.ReplyTo,
@@ -27,19 +27,19 @@ public class RpcConsumerClient : BaseRpcConsumerClient
             ea.Body);
     }
 
-    [ConsumeHandler(APPROVE_HEADER_VALUE)]
+    [ConsumeHandler(ClientMethodValues.APPROVE)]
     private void HandleApprove(BasicDeliverEventArgs ea)
     {
         AssignResultToPendingReply(ea.BasicProperties.CorrelationId, ea.ToRpcClientResponse());
     }
 
-    [ConsumeHandler(REPLY_HEADER_VALUE)]
+    [ConsumeHandler(ClientMethodValues.REPLY)]
     private void HandleReply(BasicDeliverEventArgs ea)
     {
         AssignResultToPendingReply(ea.BasicProperties.CorrelationId, ea.ToRpcClientResponse());
     }
 
-    [ConsumeHandler(APPROVABLE_REPLY_HEADER_VALUE)]
+    [ConsumeHandler(ClientMethodValues.APPROVABLE_REPLY)]
     private void HandleApprovableReply(BasicDeliverEventArgs ea)
     {
         AssignResultToPendingReply(ea.BasicProperties.CorrelationId, ea.ToRpcClientResponse());

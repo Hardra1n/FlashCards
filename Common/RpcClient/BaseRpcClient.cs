@@ -6,10 +6,6 @@ namespace Common.RpcClient;
 public abstract class BaseRpcClient : IDisposable
 {
     protected const string COMMON_HEADER_KEY = "method";
-    protected const string PING_HEADER_VALUE = "ping";
-    protected const string APPROVE_HEADER_VALUE = "approve";
-    protected const string REPLY_HEADER_VALUE = "reply";
-    protected const string APPROVABLE_REPLY_HEADER_VALUE = "reply-approve";
 
     protected IConnection Connection;
 

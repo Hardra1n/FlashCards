@@ -11,11 +11,6 @@ public static class RpcClientResponseExtensions
         {
             CorrelationId = ea.BasicProperties.CorrelationId
         };
-        if (ea.BasicProperties.Headers.TryGetValue("status", out var status)
-            && Boolean.TryParse(Encoding.ASCII.GetString((Byte[])status), out var isSuccess))
-        {
-            rpcClientResponse.IsSuccess = isSuccess;
-        }
         return rpcClientResponse;
     }
 
