@@ -42,6 +42,11 @@ public class RpcPublisherClient : BaseRpcPublisherClient
         return isApproved;
     }
 
+    public void SendReplyRefuse(string correlationId)
+    {
+        SendMessage(Array.Empty<Byte>(), ClientMethodValues.REPLY_REFUSE, null, correlationId);
+    }
+
     public new Task<RpcClientMessage<Byte[]>> SendRepliableMessage(
             Byte[] body,
             string remoteMethodName,
@@ -52,4 +57,5 @@ public class RpcPublisherClient : BaseRpcPublisherClient
             cancellationToken = new TimeoutToken(MESSAGE_EXPIRATION_TIME).Token;
         return base.SendRepliableMessage(body, remoteMethodName, correlationId, cancellationToken);
     }
+
 }

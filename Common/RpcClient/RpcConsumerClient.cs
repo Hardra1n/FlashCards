@@ -44,4 +44,10 @@ public class RpcConsumerClient : BaseRpcConsumerClient
     {
         AssignResultToPendingReply(ea.BasicProperties.CorrelationId, ea.ToRpcClientResponse());
     }
+
+    [ConsumeHandler(ClientMethodValues.REPLY_REFUSE)]
+    private void HandleReplyRefuse(BasicDeliverEventArgs ea)
+    {
+        CancelPendingReply(ea.BasicProperties.CorrelationId);
+    }
 }
