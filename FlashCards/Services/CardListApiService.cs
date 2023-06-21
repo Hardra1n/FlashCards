@@ -1,6 +1,7 @@
 using FlashCards.Models;
 using FlashCards.Models.Repositories;
 using FlashCards.RpcClients;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlashCards.Services;
 
@@ -55,13 +56,15 @@ public class CardListApiService
             var response = await _rpcPublisher.SendCardCreation();
             card.SpacedRepetitionId = response.Data;
             var insertedCard = await _repository.InsertCard(listId, card);
+            _rpcPublisher.SendApprove(response.CorrelationId, insertedCard != null);
+            if (insertedCard == null)
+                throw new Exception();
+
             _repository.SaveChanges();
             return insertedCard;
         }
         catch
         {
-            _repository.ClearChanges();
-            // _rpcPublisher.SendApprove();
             return null;
         }
     }

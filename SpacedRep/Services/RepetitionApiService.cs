@@ -18,14 +18,14 @@ public class RepetitionApiService
     public async Task<Repetition> CreateRepetition()
     {
         var repetition = await _repository.InsertRepetition();
-        await _repository.SaveChanges();
+        _repository.SaveChanges();
         return repetition;
     }
 
     public async Task<bool> RemoveRepetition(long id)
     {
         var isSuccess = await _repository.DeleteRepetition(id);
-        await _repository.SaveChanges();
+        _repository.SaveChanges();
         return isSuccess;
     }
 
@@ -44,7 +44,7 @@ public class RepetitionApiService
     public async Task<Repetition?> UpdateRepetition(Repetition rep)
     {
         var repetition = await _repository.UpdateRepetition(rep);
-        await _repository.SaveChanges();
+        _repository.SaveChanges();
         return repetition;
     }
 }

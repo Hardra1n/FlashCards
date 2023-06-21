@@ -9,7 +9,7 @@ public class SpacedRepRpcPublisher : RpcPublisherClient
 
     public async Task<RpcClientMessage<long>> SendCardCreation()
     {
-        var response = await SendRepliableMessage(Array.Empty<Byte>(), "card-creation");
+        var response = await SendRepliableMessage(Array.Empty<Byte>(), "card-creation-request");
         return Encoder.CastBodyTo<long>(response);
     }
 }

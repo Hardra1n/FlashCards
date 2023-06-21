@@ -1,18 +1,26 @@
 using Common.RpcClient;
 using RabbitMQ.Client.Events;
+using SpacedRep.Extensions;
 using SpacedRep.Services;
 
 namespace SpacedRep.RpcClients;
 
 public class RpcConsumer : RpcConsumerClient
 {
-
     private IServiceProvider _provider;
+
     public RpcConsumer(IConfiguration configuration, IServiceProvider provider)
         : base(configuration.GetSection("SpacedRep").Get<RpcClientConfiguration>()!)
     {
         _provider = provider;
     }
 
-    private RepetitionRpcService _service => _provider.GetService<RepetitionRpcService>()!;
+    [ConsumeHandler("card-creation-request")]
+    private void HandleCardCreationRequest(BasicDeliverEventArgs ea)
+    {
+        _provider.ManageServiceInScope<RepetitionRpcService>(async (service) =>
+        {
+            await service.CreateRepetition(ea.BasicProperties.CorrelationId);
+        });
+    }
 }

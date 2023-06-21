@@ -7,7 +7,7 @@ namespace SpacedRep.Models
         Task<Repetition?> GetRepetitionById(long id);
         Task<Repetition?> UpdateRepetition(Repetition rep);
         Task<bool> DeleteRepetition(long id);
-        Task SaveChanges();
-        Task ClearChanges();
+        void SaveChanges();
+        void ClearChanges();
     }
 }

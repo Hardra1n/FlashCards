@@ -42,14 +42,14 @@ namespace SpacedRep.Models
             return repToUpdate;
         }
 
-        public async Task SaveChanges()
+        public void SaveChanges()
         {
-            await Task.Run(() => _context.SaveChanges());
+            _context.SaveChanges();
         }
 
-        public async Task ClearChanges()
+        public void ClearChanges()
         {
-            await Task.Run(() => _context.ChangeTracker.Clear());
+            _context.ChangeTracker.Clear();
         }
 
         public async Task<IEnumerable<Repetition>> GetAllRepetitions()

@@ -7,7 +7,7 @@ namespace FlashCards.Data
     {
         public FlashCardsDbContext(DbContextOptions opts) : base(opts) { }
 
-        public DbSet<Card> Cards => Set<Card>();
+        // public DbSet<Card> Cards => Set<Card>();
 
         public DbSet<CardList> CardLists => Set<CardList>();
 

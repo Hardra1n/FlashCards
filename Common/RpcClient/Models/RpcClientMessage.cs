@@ -8,8 +8,9 @@ public class RpcClientMessage<T>
 
     public string? CorrelationId { get; set; }
 
-    public RpcClientMessage(T data)
+    public RpcClientMessage(T data, string? correlationId = null)
     {
+        CorrelationId = correlationId;
         Data = data;
     }
 
