@@ -1,4 +1,5 @@
 using FlashCards.Models;
+using FlashCards.Models.Dtos;
 using FlashCards.Models.Repositories;
 using FlashCards.RpcClients;
 using FlashCards.Services;
@@ -33,27 +34,27 @@ namespace FlashCards.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCard(long listId, long id, Card card)
+        public async Task<IActionResult> UpdateCard(long listId, long id, UpdateCardDto cardDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var updatedCard = await _service.UpdateCard(listId, id, card);
+            var updatedCard = await _service.UpdateCard(listId, id, cardDto.ToCard());
             return updatedCard != null
                 ? Ok(updatedCard)
                 : NotFound();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCard(long listId, Card card)
+        public async Task<IActionResult> AddCard(long listId, CreateCardDto cardDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            var createdCard = await _service.CreateCard(listId, card);
+            var createdCard = await _service.CreateCard(listId, cardDto.ToCard());
             return createdCard != null
                 ? CreatedAtAction(nameof(GetCardById),
                     new { listId = listId, id = createdCard.Id },

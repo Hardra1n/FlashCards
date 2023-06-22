@@ -1,4 +1,5 @@
 using FlashCards.Models;
+using FlashCards.Models.Dtos;
 using FlashCards.Models.Repositories;
 using FlashCards.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -32,14 +33,14 @@ namespace FlashCards.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateList(CardList list)
+        public async Task<IActionResult> CreateList(CreateCardListDto listDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var createdList = await _service.CreateCardList(list);
+            var createdList = await _service.CreateCardList(listDto.ToCardList());
             return createdList != default(CardList)
                 ? CreatedAtAction(nameof(GetListById),
                     new { id = createdList.Id },
@@ -48,13 +49,13 @@ namespace FlashCards.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateList(long id, CardList list)
+        public async Task<IActionResult> UpdateList(long id, UpdateCardListDto listDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            var updatedList = await _service.UpdateCardList(id, list);
+            var updatedList = await _service.UpdateCardList(id, listDto.ToCardList());
 
             return updatedList != default(CardList)
                 ? Ok(updatedList)
