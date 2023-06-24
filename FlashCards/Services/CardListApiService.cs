@@ -70,7 +70,7 @@ public class CardListApiService
         try
         {
             var response = await _rpcPublisher.SendCardCreation();
-            card.SpacedRepetitionId = response.Data;
+            card.SpacedRepetitionId = response.Data.Id;
             var insertedCard = await _repository.InsertCard(listId, card);
             _rpcPublisher.SendApprove(response.CorrelationId, insertedCard != null);
             if (insertedCard == null)

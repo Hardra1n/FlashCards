@@ -23,7 +23,7 @@ public class RepetitionRpcService
             if (repetition == null)
                 throw new Exception();
             _repository.SaveChanges();
-            var isApproved = await _publisher.SendRepetitionCreated(repetition, correlationId);
+            var isApproved = await _publisher.SendRepetitionCreated(repetition.ToSendRepetitionDto(), correlationId);
             if (!isApproved)
             {
                 await _repository.DeleteRepetition(repetition.Id);

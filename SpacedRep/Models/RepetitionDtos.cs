@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using SpacedRep.Models.Remote;
 
 namespace SpacedRep.Models
 {
@@ -39,5 +40,14 @@ namespace SpacedRep.Models
                 LastReviewOn = rep.LastReviewOn,
                 BlockedUntil = rep.BlockedUntil
             };
+
+        public static SendRepetitionDto ToSendRepetitionDto(this Repetition rep)
+        {
+            return new SendRepetitionDto()
+            {
+                Id = rep.Id,
+                BlockedUntil = rep.BlockedUntil
+            };
+        }
     }
 }

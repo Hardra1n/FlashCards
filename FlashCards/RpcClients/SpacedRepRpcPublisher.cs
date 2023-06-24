@@ -1,4 +1,6 @@
 using Common.RpcClient;
+using FlashCards.Extensions;
+using FlashCards.Models.Dtos.Remote;
 
 namespace FlashCards.RpcClients;
 
@@ -7,10 +9,11 @@ public class SpacedRepRpcPublisher : RpcPublisherClient
     public SpacedRepRpcPublisher(IConfiguration configuration, IRpcConsumerProvider provider)
      : base(configuration.GetSection("SpacedRep").Get<RpcClientConfiguration>()!, provider) { }
 
-    public async Task<RpcClientMessage<long>> SendCardCreation()
+    public async Task<RpcClientMessage<RecieveRepetitionDto>> SendCardCreation()
     {
         var response = await SendRepliableMessage(Array.Empty<Byte>(), "card-creation-request");
-        return Encoder.CastBodyTo<long>(response);
+        var convertedResponse = response.Copy<RecieveRepetitionDto>(response.Data.ToRecieveRepetitionDto());
+        return convertedResponse;
     }
 
     public async Task<RpcClientMessage<bool>> SendCardDeletion(long spacedRepetitionId)
