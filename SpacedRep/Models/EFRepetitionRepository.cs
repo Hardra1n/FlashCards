@@ -20,7 +20,7 @@ namespace SpacedRep.Models
 
         public async Task<bool> DeleteRepetition(long id)
         {
-            var repToDelete = await _context.FindAsync<Repetition>(id);
+            var repToDelete = await GetRepetitionById(id);
             if (repToDelete != null)
             {
                 _context.Remove(repToDelete);
@@ -29,7 +29,8 @@ namespace SpacedRep.Models
         }
 
         public async Task<Repetition?> GetRepetitionById(long id)
-            => await _context.FindAsync<Repetition>(id);
+            // => await _context.FindAsync<Repetition>(id);
+            => await Task.Run(() => _context.Repetitions.FirstOrDefault(rep => rep.Id == id));
 
 
         public async Task<Repetition?> UpdateRepetition(Repetition rep)

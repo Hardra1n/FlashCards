@@ -35,4 +35,22 @@ public class RepetitionRpcService
             _publisher.SendReplyRefuse(correlationId);
         }
     }
+
+    public async Task DeleteRepetition(string correlationId, long repetitionId)
+    {
+        try
+        {
+            var result = await _repository.DeleteRepetition(repetitionId);
+            if (!result)
+                throw new Exception();
+            var remoteResult = await _publisher.SendRepetitionDeletion(correlationId);
+            if (!remoteResult)
+                throw new Exception();
+            _repository.SaveChanges();
+        }
+        catch
+        {
+            _publisher.SendReplyRefuse(correlationId);
+        }
+    }
 }

@@ -22,6 +22,15 @@ public static class RpcClientResponseExtensions
         return response;
     }
 
+    public static RpcClientMessage<bool> CastBodyToBoolean(this Encoding encoder, RpcClientMessage<Byte[]> responseToCast)
+    {
+        string body = encoder.GetString(responseToCast.Data);
+        bool parsedBody = Boolean.Parse(body);
+        var response = responseToCast.Copy<bool>(parsedBody);
+        return response;
+    }
+
+
     public static RpcClientMessage<string> CastBodyToString(this Encoding encoder, RpcClientMessage<Byte[]> responseToCast)
     {
         string body = encoder.GetString(responseToCast.Data);

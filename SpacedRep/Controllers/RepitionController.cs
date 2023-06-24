@@ -26,14 +26,14 @@ namespace SpacedRep.Controllers
             return result != null ? Ok(result.ToReadDto()) : NotFound();
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Create()
-        {
-            var result = await _service.CreateRepetition();
-            return result != null
-                ? CreatedAtAction(nameof(GetById), new { id = result.Id }, result)
-                : BadRequest();
-        }
+        // [HttpPost]
+        // public async Task<ActionResult> Create()
+        // {
+        //     var result = await _service.CreateRepetition();
+        //     return result != null
+        //         ? CreatedAtAction(nameof(GetById), new { id = result.Id }, result)
+        //         : BadRequest();
+        // }
 
         [HttpPut]
         public async Task<ActionResult> Update(RepetitionUpdateDto dto)
@@ -42,8 +42,8 @@ namespace SpacedRep.Controllers
             return result != null ? Ok(result) : NotFound();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(long id)
-            => await _service.RemoveRepetition(id) ? Ok() : NotFound();
+        // [HttpDelete("{id}")]
+        // public async Task<ActionResult> Delete(long id)
+        //     => await _service.RemoveRepetition(id) ? Ok() : NotFound();
     }
 }

@@ -12,4 +12,11 @@ public class SpacedRepRpcPublisher : RpcPublisherClient
         var response = await SendRepliableMessage(Array.Empty<Byte>(), "card-creation-request");
         return Encoder.CastBodyTo<long>(response);
     }
+
+    public async Task<RpcClientMessage<bool>> SendCardDeletion(long spacedRepetitionId)
+    {
+        var body = Encoder.GetBytes(spacedRepetitionId.ToString());
+        var response = await SendRepliableMessage(body, "card-deletion-request");
+        return Encoder.CastBodyToBoolean(response);
+    }
 }

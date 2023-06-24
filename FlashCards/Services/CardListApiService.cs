@@ -19,9 +19,25 @@ public class CardListApiService
 
     public async Task<bool> RemoveCard(long listId, long cardId)
     {
-        var result = await _repository.DeleteCard(listId, cardId);
-        _repository.SaveChanges();
-        return result;
+        try
+        {
+            var cards = await _repository.GetCards(listId);
+            var cardToRemove = cards?.FirstOrDefault(card => card.Id == cardId);
+            if (cardToRemove == null)
+                throw new Exception();
+
+            var remoteResult = await _rpcPublisher.SendCardDeletion(cardToRemove.SpacedRepetitionId);
+            var result = await _repository.DeleteCard(listId, cardId);
+            if (remoteResult.Data == false || result == false)
+                throw new Exception();
+            _repository.SaveChanges();
+            _rpcPublisher.SendApprove(remoteResult.CorrelationId);
+            return result;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public async Task<bool> RemoveCardList(long listId)

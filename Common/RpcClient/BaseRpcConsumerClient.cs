@@ -49,7 +49,7 @@ public abstract class BaseRpcConsumerClient : BaseRpcClient
 
     private void ConsumeFromCommonHeaderKey(BasicDeliverEventArgs ea, string? value)
     {
-        if (value != null && HandlerDictionary.Remove(value, out var action))
+        if (value != null && HandlerDictionary.TryGetValue(value, out var action))
             action.Invoke(ea);
     }
 

@@ -29,7 +29,7 @@ public abstract class BaseRpcPublisherClient : BaseRpcClient
         props.Headers.Add(COMMON_HEADER_KEY, remoteMethodName);
         Channel.BasicPublish(
             exchange: string.Empty,
-            routingKey: base.QueueName,
+            routingKey: QueueName,
             mandatory: false,
             basicProperties: props,
             body: body);
