@@ -22,4 +22,12 @@ public class SpacedRepRpcPublisher : RpcPublisherClient
         var response = await SendRepliableMessage(body, "card-deletion-request");
         return Encoder.CastBodyToBoolean(response);
     }
+
+    internal async Task<RpcClientMessage<RecieveRepetitionDto>> SendCardGetting(long spacedRepetitionId)
+    {
+        var body = Encoder.GetBytes(spacedRepetitionId.ToString());
+        var response = await SendRepliableMessage(body, "card-getting-request");
+        var convertedResponse = response.Copy<RecieveRepetitionDto>(response.Data.ToRecieveRepetitionDto());
+        return convertedResponse;
+    }
 }

@@ -29,8 +29,8 @@ namespace FlashCards.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCardById(long listId, long id)
         {
-            var card = await _service.GetCardById(listId, id);
-            return card != null ? Ok(card) : NotFound();
+            var getCardDto = await _service.GetCardById(listId, id);
+            return getCardDto != null ? Ok(getCardDto) : NotFound();
         }
 
         [HttpPut("{id}")]
@@ -54,11 +54,11 @@ namespace FlashCards.Controllers
             {
                 return BadRequest();
             }
-            var createdCard = await _service.CreateCard(listId, cardDto.ToCard());
-            return createdCard != null
+            var getCardDto = await _service.CreateCard(listId, cardDto.ToCard());
+            return getCardDto != null
                 ? CreatedAtAction(nameof(GetCardById),
-                    new { listId = listId, id = createdCard.Id },
-                    createdCard)
+                    new { listId = listId, id = getCardDto.Id },
+                    getCardDto)
                 : NotFound();
         }
 

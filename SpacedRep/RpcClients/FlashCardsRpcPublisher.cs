@@ -25,4 +25,12 @@ public class FlashCardsRpcPublisher : RpcPublisherClient
         var isApproved = await SendApprovableReply(rpcMessage);
         return isApproved;
     }
+
+    internal void SendRepetitionGetting(Repetition repetition, string correlationId)
+    {
+        var body = repetition.ToSendRepetitionDto().ToByteArray();
+        var rpcMessage = new RpcClientMessage<Byte[]>(body, correlationId);
+        SendReply(rpcMessage);
+        return;
+    }
 }

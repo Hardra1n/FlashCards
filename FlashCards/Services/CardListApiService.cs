@@ -1,4 +1,6 @@
 using FlashCards.Models;
+using FlashCards.Models.Dtos;
+using FlashCards.Models.Dtos.Remote;
 using FlashCards.Models.Repositories;
 using FlashCards.RpcClients;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +67,7 @@ public class CardListApiService
         return cards;
     }
 
-    public async Task<Card?> CreateCard(long listId, Card card)
+    public async Task<GetCardDto?> CreateCard(long listId, Card card)
     {
         try
         {
@@ -77,7 +79,7 @@ public class CardListApiService
                 throw new Exception();
 
             _repository.SaveChanges();
-            return insertedCard;
+            return insertedCard.ToGetCardDto(response.Data);
         }
         catch
         {
@@ -106,9 +108,20 @@ public class CardListApiService
         return updatedCardList;
     }
 
-    public async Task<Card?> GetCardById(long cardListId, long cardId)
+    public async Task<GetCardDto?> GetCardById(long cardListId, long cardId)
     {
-        var cards = await _repository.GetCards(cardListId);
-        return cards?.FirstOrDefault(card => card.Id == cardId);
+        try
+        {
+            var cards = await _repository.GetCards(cardListId);
+            var requiredCard = cards?.FirstOrDefault(card => card.Id == cardId);
+            if (requiredCard == null)
+                throw new Exception();
+            var response = await _rpcPublisher.SendCardGetting(requiredCard.SpacedRepetitionId);
+            return requiredCard.ToGetCardDto(response.Data);
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

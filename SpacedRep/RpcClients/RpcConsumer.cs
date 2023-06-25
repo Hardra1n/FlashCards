@@ -33,4 +33,14 @@ public class RpcConsumer : RpcConsumerClient
             await service.DeleteRepetition(ea.BasicProperties.CorrelationId, repetitionId);
         });
     }
+
+    [ConsumeHandler("card-getting-request")]
+    private void HandlCardGettingRequest(BasicDeliverEventArgs ea)
+    {
+        long repetitionId = long.Parse(Encoder.GetString(ea.Body.ToArray()));
+        _provider.ManageServiceInScope<RepetitionRpcService>(async service =>
+        {
+            await service.GetRepetition(ea.BasicProperties.CorrelationId, repetitionId);
+        });
+    }
 }

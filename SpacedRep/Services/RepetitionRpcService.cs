@@ -53,4 +53,19 @@ public class RepetitionRpcService
             _publisher.SendReplyRefuse(correlationId);
         }
     }
+
+    internal async Task GetRepetition(string correlationId, long repetitionId)
+    {
+        try
+        {
+            var repetition = await _repository.GetRepetitionById(repetitionId);
+            if (repetition == null)
+                throw new Exception();
+            _publisher.SendRepetitionGetting(repetition, correlationId);
+        }
+        catch
+        {
+            _publisher.SendReplyRefuse(correlationId);
+        }
+    }
 }
