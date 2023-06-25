@@ -29,7 +29,6 @@ namespace SpacedRep.Models
         }
 
         public async Task<Repetition?> GetRepetitionById(long id)
-            // => await _context.FindAsync<Repetition>(id);
             => await Task.Run(() => _context.Repetitions.FirstOrDefault(rep => rep.Id == id));
 
 
@@ -56,6 +55,11 @@ namespace SpacedRep.Models
         public async Task<IEnumerable<Repetition>> GetAllRepetitions()
         {
             return await Task.Run(() => _context.Repetitions.AsEnumerable());
+        }
+
+        public async Task<IEnumerable<Repetition?>> GetRepetitionById(long[] ids)
+        {
+            return await Task.Run(() => ids.Select(id => _context.Repetitions.FirstOrDefault(rep => rep.Id == id)));
         }
     }
 }

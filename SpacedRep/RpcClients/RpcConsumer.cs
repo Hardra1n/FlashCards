@@ -1,6 +1,7 @@
 using Common.RpcClient;
 using Common.WebApplicationExtensions;
 using RabbitMQ.Client.Events;
+using SpacedRep.Extensions;
 using SpacedRep.Services;
 
 namespace SpacedRep.RpcClients;
@@ -41,6 +42,16 @@ public class RpcConsumer : RpcConsumerClient
         _provider.ManageServiceInScope<RepetitionRpcService>(async service =>
         {
             await service.GetRepetition(ea.BasicProperties.CorrelationId, repetitionId);
+        });
+    }
+
+    [ConsumeHandler("cards-getting-request")]
+    private void HandleCardsGettingRequest(BasicDeliverEventArgs ea)
+    {
+        long[] repetitionsId = ea.Body.ToArray().ToLongArray();
+        _provider.ManageServiceInScope<RepetitionRpcService>(async service =>
+        {
+            await service.GetRepetitions(ea.BasicProperties.CorrelationId, repetitionsId);
         });
     }
 }

@@ -9,5 +9,6 @@ namespace SpacedRep.Models
         Task<bool> DeleteRepetition(long id);
         void SaveChanges();
         void ClearChanges();
+        Task<IEnumerable<Repetition?>> GetRepetitionById(long[] ids);
     }
 }

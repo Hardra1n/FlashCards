@@ -23,11 +23,20 @@ public class SpacedRepRpcPublisher : RpcPublisherClient
         return Encoder.CastBodyToBoolean(response);
     }
 
-    internal async Task<RpcClientMessage<RecieveRepetitionDto>> SendCardGetting(long spacedRepetitionId)
+    public async Task<RpcClientMessage<RecieveRepetitionDto>> SendCardGetting(long spacedRepetitionId)
     {
         var body = Encoder.GetBytes(spacedRepetitionId.ToString());
         var response = await SendRepliableMessage(body, "card-getting-request");
         var convertedResponse = response.Copy<RecieveRepetitionDto>(response.Data.ToRecieveRepetitionDto());
+        return convertedResponse;
+    }
+
+    public async Task<RpcClientMessage<IEnumerable<RecieveRepetitionDto>>> SendCardsGetting(long[] spacedRepetitionIds)
+    {
+        var body = spacedRepetitionIds.ToByteArray();
+        var response = await SendRepliableMessage(body, "cards-getting-request");
+        var convertedResponse = response.Copy<IEnumerable<RecieveRepetitionDto>>(
+            response.Data.ToRecieveRepetitionDtoArray());
         return convertedResponse;
     }
 }

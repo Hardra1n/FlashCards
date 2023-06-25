@@ -14,4 +14,38 @@ public static class BinaryConvertExtensions
             BlockedUntil = dtTicks != 0 ? DateTime.FromBinary(dtTicks) : null
         };
     }
+
+    public static RecieveRepetitionDto[] ToRecieveRepetitionDtoArray(this Byte[] array)
+    {
+        int singleDtoSize = sizeof(long) + sizeof(long);
+        int numberOfDtos = (array.Length + 1) / singleDtoSize;
+        RecieveRepetitionDto[] dtoArray
+            = new RecieveRepetitionDto[numberOfDtos];
+
+        for (int i = 0; i < numberOfDtos; i++)
+        {
+            var singleDtoArray = array
+                .Skip(singleDtoSize * i)
+                .Take(singleDtoSize);
+            dtoArray[i] = ToRecieveRepetitionDto(singleDtoArray.ToArray());
+        }
+        return dtoArray;
+    }
+
+    public static Byte[] ToByteArray(this long[] longArray)
+    {
+        byte[] byteArray = new byte[longArray.Length * sizeof(long)];
+        int index = 0;
+        foreach (var longValue in longArray)
+        {
+            var longBytes = BitConverter.GetBytes(longValue);
+            foreach (var longByte in longBytes)
+            {
+                byteArray[index] = longByte;
+                index++;
+            }
+        }
+
+        return byteArray;
+    }
 }

@@ -25,4 +25,15 @@ public static class BinaryConvertExtensions
 
         return array;
     }
+
+    public static long[] ToLongArray(this Byte[] array)
+    {
+        int longAmount = array.Length / sizeof(long);
+        long[] longArray = new long[longAmount];
+        for (int i = 0; i < longArray.Length; i++)
+        {
+            longArray[i] = BitConverter.ToInt64(array, i * sizeof(long));
+        }
+        return longArray;
+    }
 }

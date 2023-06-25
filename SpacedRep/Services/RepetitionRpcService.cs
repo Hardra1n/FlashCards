@@ -1,4 +1,5 @@
 using SpacedRep.Models;
+using SpacedRep.Models.Remote;
 using SpacedRep.RpcClients;
 
 namespace SpacedRep.Services;
@@ -62,6 +63,26 @@ public class RepetitionRpcService
             if (repetition == null)
                 throw new Exception();
             _publisher.SendRepetitionGetting(repetition, correlationId);
+        }
+        catch
+        {
+            _publisher.SendReplyRefuse(correlationId);
+        }
+    }
+
+    internal async Task GetRepetitions(string correlationId, long[] repetitionsId)
+    {
+        try
+        {
+            var repetitions = await _repository.GetRepetitionById(repetitionsId);
+            List<SendRepetitionDto> dtos = new List<SendRepetitionDto>();
+            foreach (var rep in repetitions)
+            {
+                if (rep == null)
+                    throw new Exception();
+                dtos.Add(rep.ToSendRepetitionDto());
+            }
+            _publisher.SendRepetitionsGetting(dtos, correlationId);
         }
         catch
         {

@@ -33,4 +33,16 @@ public class FlashCardsRpcPublisher : RpcPublisherClient
         SendReply(rpcMessage);
         return;
     }
+
+    internal void SendRepetitionsGetting(IEnumerable<SendRepetitionDto> dtos, string correlationId)
+    {
+        List<Byte> body = new List<byte>();
+        foreach (var dto in dtos)
+        {
+            body.AddRange(dto.ToByteArray());
+        }
+        var rpcMessage = new RpcClientMessage<Byte[]>(body.ToArray(), correlationId);
+        SendReply(rpcMessage);
+        return;
+    }
 }
