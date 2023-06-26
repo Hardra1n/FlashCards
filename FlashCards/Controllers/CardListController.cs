@@ -26,9 +26,9 @@ namespace FlashCards.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetListById(long id)
         {
-            var listToShow = await _service.GetCardListById(id);
-            return listToShow != default(CardList)
-                ? Ok(listToShow)
+            var cardListDto = await _service.GetCardListById(id);
+            return cardListDto != null
+                ? Ok(cardListDto)
                 : NotFound();
         }
 

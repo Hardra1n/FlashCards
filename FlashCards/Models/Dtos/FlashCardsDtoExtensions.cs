@@ -45,4 +45,19 @@ public static class FlashCardsDtoExtensions
             BackSide = card.BackSide,
             BlockedUntil = repetitionDto.BlockedUntil
         };
+
+    public static GetCardListDto ToGetCardListDto(this CardList list, IEnumerable<GetCardDto> dtos)
+    {
+        var cardListDto = new GetCardListDto()
+        {
+            Id = list.Id,
+            Name = list.Name,
+            Description = list.Description
+        };
+        foreach (var dto in dtos)
+        {
+            cardListDto.Cards.Add(dto);
+        }
+        return cardListDto;
+    }
 }

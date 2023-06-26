@@ -50,10 +50,24 @@ public class CardListApiService
     }
 
     // GetCardListDto create
-    public async Task<CardList?> GetCardListById(long id)
+    public async Task<GetCardListDto?> GetCardListById(long id)
     {
-        var cardList = await _repository.GetCardListById(id);
-        return cardList;
+        try
+        {
+            var cardList = await _repository.GetCardListById(id);
+            if (cardList == null)
+                throw new Exception();
+            var idArray = cardList.Cards.Select(card => card.SpacedRepetitionId);
+            var response = await _rpcPublisher.SendCardsGetting(idArray.ToArray());
+            var resultDtos = cardList.Cards.Select(card => card.ToGetCardDto(
+            response.Data.First(rep => rep.Id == card.SpacedRepetitionId)));
+            var cardListDto = cardList.ToGetCardListDto(resultDtos);
+            return cardListDto;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public async Task<IEnumerable<CardList>> GetCardLists()
@@ -62,7 +76,6 @@ public class CardListApiService
         return cardLists;
     }
 
-    // Enumberable of GetCardDto
     public async Task<IEnumerable<GetCardDto>?> GetCards(long cardListId)
     {
         try
